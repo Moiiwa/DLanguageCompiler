@@ -108,6 +108,7 @@ public class Tokens {
         unsortedTokens.add("print");
         unsortedTokens.add(";");
         unsortedTokens.add("\n");
+        unsortedTokens.add(":=");
     }
 
     private static void initializeParameterTokens(){
