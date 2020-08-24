@@ -32,7 +32,7 @@ public class Tag {
         IS = 290,
         IN = 291,
 
-        // Readers
+        // Input/Output
         READ_INT = 300,
         READ_REAL = 301,
         READ_STRING = 302,
@@ -48,6 +48,9 @@ public class Tag {
         FOR = 316,
         LOOP = 317,
         LAMBDA = 318,
-        VAR = 319;
+
+        // Basic
+        VAR = 320,
+        ASSIGN = 321;
 
 }
