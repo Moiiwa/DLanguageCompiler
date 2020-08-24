@@ -2,12 +2,10 @@ package lexer;
 
 public class Tag {
     public final static int
-        NUM = 256, // number
-        ID = 257, // identifier
-
-        // Boolean literals
-        TRUE = 258,
-        FALSE = 259,
+        ID = 256, // identifier
+        INT_TOKEN = 256,
+        REAL_TOKEN = 257,
+        STR_TOKEN = 258,
 
         // Types
         INT = 260,
@@ -16,6 +14,10 @@ public class Tag {
         STRING = 263,
         EMPTY = 264,
         FUNC = 265,
+
+        // Boolean literals
+        TRUE = 266,
+        FALSE = 267,
 
         // Logical operators
         AND = 270,
