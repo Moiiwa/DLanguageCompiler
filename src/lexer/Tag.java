@@ -27,6 +27,7 @@ public class Tag {
         GE = 276,
         NE = 277,
         NOT = 278,
+        EQ = 279,
 
         // Is, In operator
         IS = 290,
@@ -48,9 +49,26 @@ public class Tag {
         FOR = 316,
         LOOP = 317,
         LAMBDA = 318,
+        BEGIN = 319,
 
         // Basic
         VAR = 320,
-        ASSIGN = 321;
+        ASSIGN = 321,
+
+        //Unsorted
+        OPFIGBR = 330,
+        CLFIGBR = 331,
+        OPBR = 332,
+        CLBR = 333,
+        OPSQBR = 334,
+        CLSQBR = 335,
+        COMMA = 336,
+
+        //Arithmetic operators
+        PLUS = 340,
+        MINUS = 341,
+        MULT = 342,
+        DIV = 343;
+
 
 }
