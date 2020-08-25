@@ -3,11 +3,11 @@ package lexer;
 /**
  * Class representing integer numbers as tokens.
  */
-public class Num extends Token {
+public class IntToken extends Token {
     public final int value;
 
-    public Num(int value) {
-        super(Tag.NUM);
+    public IntToken(int value) {
+        super(Tag.INT_TOKEN);
         this.value = value;
     }
 
