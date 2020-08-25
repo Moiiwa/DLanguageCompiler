@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
+import lexer.*;
 
 class FileParser {
     public List<String> parsed = new LinkedList<String>();
@@ -11,9 +12,9 @@ class FileParser {
             return new BufferedReader(new FileReader(file));
     }
 
-    List<lexer.Token> ParseFile(String path) throws Exception {
+    List<Token> ParseFile(String path) throws Exception {
         BufferedReader br = ReadFile(path);
-        List<lexer.Token> words = new LinkedList<>();
+        List<Token> words = new LinkedList<>();
         System.out.println(br.read());
         file_text = br.toString();
         int index = 0;
@@ -23,7 +24,7 @@ class FileParser {
         return words;
     }
 
-    private lexer.Token scan(Integer local_index) throws Exception{
+    private Token scan(Integer local_index) throws Exception{
         char peek = ' ';
         for ( ; ; peek = file_text.charAt(local_index)){
             local_index += 1;
@@ -40,7 +41,7 @@ class FileParser {
                 if (peek != '.') v = 10*v + Character.digit(peek, 10);
                 local_index += 1;
             } while (Character.isDigit(peek) || peek == '.'); //Questionable
-            return new lexer.Token(lexer.Tag.NUM);
+            return new Token(Tag.NUM);
         }
         else if (Character.isLetter(peek)){
             StringBuilder sb = new StringBuilder();
@@ -52,9 +53,9 @@ class FileParser {
             String s = sb.toString();
             parsed.add(sb.toString());
             if (Tokens.allTokens.contains(s))
-                return new lexer.Token(AssignTag(s));
+                return new Token(AssignTag(s));
             else
-                return new lexer.Token(lexer.Tag.ID);
+                return new Token(Tag.ID);
         }
         else if (!Character.isLetterOrDigit(peek)){
             StringBuilder sb = new StringBuilder();
@@ -65,60 +66,60 @@ class FileParser {
             } while (!Character.isLetterOrDigit(peek) && peek != ' ' && peek != '\t' && peek != '\n');
             String s = sb.toString();
             if (Tokens.allTokens.contains(s)){
-                return new lexer.Token(AssignTag(s));
+                return new Token(AssignTag(s));
             }
             else throw new Exception("Incorrect Input");
         }
-        else return new lexer.Token(lexer.Tag.EMPTY);
+        else return new Token(Tag.EMPTY);
     }
      private int AssignTag(String s){
         s = s.toLowerCase();
         switch (s){
-            case "true": return lexer.Tag.TRUE;
-            case "false": return lexer.Tag.FALSE;
-            case "int": return lexer.Tag.INT;
-            case "real": return lexer.Tag.REAL;
-            case "bool": return lexer.Tag.BOOL;
-            case "string": return lexer.Tag.STRING;
-            case "empty": return lexer.Tag.EMPTY;
-            case "func": return lexer.Tag.FUNC;
-            case "and": return lexer.Tag.AND;
-            case "or": return lexer.Tag.OR;
-            case "xor": return lexer.Tag.XOR;
-            case "<": return lexer.Tag.LT;
-            case "<=": return lexer.Tag.LE;
-            case ">": return lexer.Tag.GT;
-            case ">=": return lexer.Tag.GE;
-            case "/=": return lexer.Tag.NE;
-            case "not": return lexer.Tag.NOT;
-            case "is": return lexer.Tag.IS;
-            case "in": return lexer.Tag.IN;
-            case "=": return lexer.Tag.EQ;
-            case "return": return lexer.Tag.RETURN;
-            case "print": return lexer.Tag.PRINT;
-            case "if": return lexer.Tag.IF;
-            case "then": return lexer.Tag.THEN;
-            case "else": return lexer.Tag.ELSE;
-            case "end": return lexer.Tag.END;
-            case "while": return lexer.Tag.WHILE;
-            case "for": return lexer.Tag.FOR;
-            case "loop": return lexer.Tag.LOOP;
-            case "lambda": return lexer.Tag.LAMBDA;
-            case "var": return lexer.Tag.VAR;
-            case ":=": return lexer.Tag.ASSIGN;
-            case "begin": return lexer.Tag.BEGIN;
-            case "{": return lexer.Tag.OPFIGBR;
-            case "}": return lexer.Tag.CLFIGBR;
-            case "(": return lexer.Tag.OPBR;
-            case ")": return lexer.Tag.CLBR;
-            case "[": return lexer.Tag.OPSQBR;
-            case "]": return lexer.Tag.CLSQBR;
-            case ",": return lexer.Tag.COMMA;
-            case "+": return lexer.Tag.PLUS;
-            case "-": return lexer.Tag.MINUS;
-            case "*": return lexer.Tag.MULT;
-            case "/": return lexer.Tag.DIV;
-            default: return lexer.Tag.ID;
+            case "true": return Tag.TRUE;
+            case "false": return Tag.FALSE;
+            case "int": return Tag.INT;
+            case "real": return Tag.REAL;
+            case "bool": return Tag.BOOL;
+            case "string": return Tag.STRING;
+            case "empty": return Tag.EMPTY;
+            case "func": return Tag.FUNC;
+            case "and": return Tag.AND;
+            case "or": return Tag.OR;
+            case "xor": return Tag.XOR;
+            case "<": return Tag.LT;
+            case "<=": return Tag.LE;
+            case ">": return Tag.GT;
+            case ">=": return Tag.GE;
+            case "/=": return Tag.NE;
+            case "not": return Tag.NOT;
+            case "is": return Tag.IS;
+            case "in": return Tag.IN;
+            case "=": return Tag.EQ;
+            case "return": return Tag.RETURN;
+            case "print": return Tag.PRINT;
+            case "if": return Tag.IF;
+            case "then": return Tag.THEN;
+            case "else": return Tag.ELSE;
+            case "end": return Tag.END;
+            case "while": return Tag.WHILE;
+            case "for": return Tag.FOR;
+            case "loop": return Tag.LOOP;
+            case "lambda": return Tag.LAMBDA;
+            case "var": return Tag.VAR;
+            case ":=": return Tag.ASSIGN;
+            case "begin": return Tag.BEGIN;
+            case "{": return Tag.OPFIGBR;
+            case "}": return Tag.CLFIGBR;
+            case "(": return Tag.OPBR;
+            case ")": return Tag.CLBR;
+            case "[": return Tag.OPSQBR;
+            case "]": return Tag.CLSQBR;
+            case ",": return Tag.COMMA;
+            case "+": return Tag.PLUS;
+            case "-": return Tag.MINUS;
+            case "*": return Tag.MULT;
+            case "/": return Tag.DIV;
+            default: return Tag.ID;
 
 
         }
