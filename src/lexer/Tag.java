@@ -58,13 +58,15 @@ public class Tag {
         ASSIGN = 321,
 
         //Unsorted
-        OPFIGBR = 330,
-        CLFIGBR = 331,
-        OPBR = 332,
-        CLBR = 333,
-        OPSQBR = 334,
-        CLSQBR = 335,
-        COMMA = 336,
+        OPFIGBR = 330, //{
+        CLFIGBR = 331, //}
+        OPBR = 332,    //(
+        CLBR = 333,    //)
+        OPSQBR = 334,  //[
+        CLSQBR = 335,  //]
+        COMMA = 336,   //,
+        SMCLN = 337,   //;
+        CLN =338,      //:
 
         //Arithmetic operators
         PLUS = 340,
