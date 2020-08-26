@@ -3,10 +3,12 @@ import java.util.Iterator;
 public class Interpreter {
 
     public static void main(String[] args) {
-        Iterator token = Tokens.allTokens.iterator();
-        while (token.hasNext()){
-            System.out.println(token.next());
+        FileParser parser = new FileParser();
+        try {
+            parser.scan("1234.5 befo13_R2e 123 355.3 asd");
+            System.out.println(parser.tokenList.size());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println(Tokens.allTokens.size());
     }
 }
