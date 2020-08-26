@@ -3,9 +3,9 @@ package lexer;
 public class Tag {
     public final static int
         ID = 256, // identifier
-        INT_TOKEN = 256,
-        REAL_TOKEN = 257,
-        STR_TOKEN = 258,
+        INT_TOKEN = 257,
+        REAL_TOKEN = 258,
+        STR_TOKEN = 259,
 
         // Types
         INT = 260,

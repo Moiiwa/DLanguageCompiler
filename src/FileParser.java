@@ -105,8 +105,10 @@ class FileParser {
                         break;
                     }
                 } while (Character.isLetter(peek) || Character.isDigit(peek) || peek == '_');
-                if(stringBuilder!=null)
+                if(stringBuilder!=null) {
                     tokenList.add(new StrToken(stringBuilder.toString()));
+                    stringBuilder = null;
+                }
             }
         }
     }
