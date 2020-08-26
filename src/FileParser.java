@@ -37,16 +37,16 @@ class FileParser {
         return appropriateSymbols.contains(c);
     }
     private static BufferedReader ReadFile(String path) throws FileNotFoundException {
-        File file = new File(path);
-            return new BufferedReader(new FileReader(file));
+        FileReader fileReader = new FileReader(path);
+            return new BufferedReader(fileReader);
     }
 
     public void ParseFile(String path) throws Exception {
         BufferedReader br = ReadFile(path);
-        System.out.println(br.read());
 
         do{
             line = br.readLine();
+            if(line!=null)
             scan(line);
         }while (line!=null);
     }
