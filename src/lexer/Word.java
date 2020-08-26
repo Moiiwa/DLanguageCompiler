@@ -44,6 +44,24 @@ public class Word extends Token {
             case "readint": {tag = Tag.READ_INT; break;}
             case "readreal": {tag = Tag.READ_REAL; break;}
             case "readstring": {tag = Tag.READ_STRING; break;}
+            case ",": {tag = Tag.COMMA; break;}
+            case ";": {tag = Tag.SMCLN; break;}
+            case ":":  {tag = Tag.CLN; break;}
+            case "=": {tag = Tag.EQ; break;}
+            case ":=": {tag = Tag.ASSIGN; break;}
+            case "<=": {tag = Tag.LE; break;}
+            case ">=": {tag = Tag.GE; break;}
+            case "/=": {tag = Tag.NE; break;}
+            case "/": {tag = Tag.DIV; break;}
+            case "+": {tag = Tag.PLUS; break;}
+            case "-": {tag = Tag.MINUS; break;}
+            case "*": {tag = Tag.MULT; break;}
+            case "(": {tag = Tag.OPBR; break;}
+            case ")": {tag = Tag.CLBR; break;}
+            case "[": {tag = Tag.OPSQBR; break;}
+            case "]": {tag = Tag.CLSQBR; break;}
+            case "{": {tag = Tag.OPFIGBR; break;}
+            case "}": {tag = Tag.CLFIGBR; break;}
             default: {tag = Tag.ID; break;}
         }
         super.setTag(tag);
