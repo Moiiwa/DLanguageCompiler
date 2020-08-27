@@ -31,6 +31,14 @@ class FileParser {
         appropriateSymbols.add('>');
         appropriateSymbols.add(':');
         appropriateSymbols.add(';');
+        appropriateSymbols.add(',');
+        appropriateSymbols.add('(');
+        appropriateSymbols.add(')');
+        appropriateSymbols.add('[');
+        appropriateSymbols.add(']');
+        appropriateSymbols.add('{');
+        appropriateSymbols.add('}');
+        appropriateSymbols.add('.');
     }
 
     public boolean isAppropriate(Character c){
@@ -163,11 +171,16 @@ class FileParser {
                         case ']':
                         case '{':
                         case '}':
+                        case ',':
                         case '-': {
                             if (i + 1 < line.length()) {
                                 i += 1;
                                 peek = line.charAt(i);
                                 checkNext(peek);
+                            }
+                            else{
+                                tokenList.add(new Word(stringBuilder.toString()));
+                                stringBuilder = null;
                             }
                             break;
                         }
@@ -182,7 +195,7 @@ class FileParser {
                                     stringBuilder.append(peek);
                                     tokenList.add(new Word(stringBuilder.toString()));
                                     stringBuilder = null;
-                                    if (isAppropriate(line.charAt(i + 1))) {
+                                    if (i+1 < line.length() &&isAppropriate(line.charAt(i + 1))) {
                                         throw new TypeNotPresentException("the one, you wrote is", null);
                                     }
                                 } else {
@@ -200,6 +213,27 @@ class FileParser {
                                 }
                             }
                             break;
+                        }
+                        case '.':{
+                            if (i + 1 < line.length()) {
+                                i += 1;
+                                peek = line.charAt(i);
+                                if(peek == '.'){
+                                    stringBuilder.append(peek);
+                                    if  (i + 1 < line.length() && (Character.isDigit(line.charAt(i+1)) || Character.isLetter(line.charAt(i+1))
+                                            || line.charAt(i+1)==' ' || line.charAt(i+1) == '\t' || line.charAt(i+1) == '\n')){
+                                        tokenList.add(new Word(stringBuilder.toString()));
+                                        stringBuilder = null;
+                                    } else if(i + 1 == line.length()){
+                                        tokenList.add(new Word(stringBuilder.toString()));
+                                        stringBuilder = null;
+                                    } else{
+                                        throw new TypeNotPresentException("the one, you wrote is", null);
+                                    }
+                                } else {
+                                    throw new TypeNotPresentException("the one, you wrote is", null);
+                                }
+                            }
                         }
                     }
                 }

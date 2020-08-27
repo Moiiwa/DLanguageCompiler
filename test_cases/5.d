@@ -1,5 +1,3 @@
-// Array and sort example
-
 var array := [5, 75, 58, 7, 1, 9]
 var len = 6
 

@@ -1,4 +1,3 @@
-# Conditional statement example
 
 var number := 6
 
