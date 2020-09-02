@@ -4,9 +4,9 @@ package lexer;
  * Class representing real numbers as tokens.
  */
 public class RealToken extends Token {
-    public final float value;
+    public final double value;
 
-    public RealToken(float value) {
+    public RealToken(double value) {
         super(Tag.REAL_TOKEN);
         this.value = value;
     }
