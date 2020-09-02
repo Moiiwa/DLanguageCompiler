@@ -8,4 +8,7 @@ public class Lexer {
     // characters that separate statements
     public final static Set<Character> separatorCharacters = Set.of('\n', ';');
 
+    public void scan(String line) {
+        // scanner code
+    }
 }

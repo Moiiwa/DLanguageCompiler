@@ -58,7 +58,7 @@ enum Tag {
     VAR,
     ASSIGN,
 
-    //Arithmetic operators
+    // Arithmetic operators
     PLUS,
     MINUS,
     MULT,
