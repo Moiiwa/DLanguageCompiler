@@ -5,19 +5,15 @@ package lexer;
  * This base class is used for one-character tokens (i.e. ; = < >).
  */
 public class Token {
-    private int tag;
+    private final Tag tag;
 
-    public Token(int tag) {
+    public Token(Tag tag) {
         this.tag = tag;
     }
 
     @Override
     public String toString() {
-        return "" + (char) tag;
-    }
-
-    public void setTag(int tag){
-        this.tag = tag;
+        return "Token(" + tag + ")";
     }
 
 }

@@ -13,6 +13,6 @@ public class IntToken extends Token {
 
     @Override
     public String toString() {
-        return "" + value;
+        return "IntToken(" + value + ")";
     }
 }

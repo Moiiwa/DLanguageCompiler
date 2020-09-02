@@ -127,20 +127,20 @@ class FileParser {
                                 stringBuilder.append(peek);
                             } else if (peek != ' ' && peek != '\t' && peek != '\n') {//TODO: also check if it's not symbols like /=, =, := and so on
                                 if (isAppropriate(peek)) {
-                                    tokenList.add(new Word(stringBuilder.toString()));
+                                    tokenList.add(new IdentifierToken(stringBuilder.toString()));
                                     stringBuilder = null;
                                     break;
                                 } else
                                     throw new TypeNotPresentException("the one, you wrote is", null);
                             }
                         } else {
-                            tokenList.add(new Word(stringBuilder.toString()));
+                            tokenList.add(new IdentifierToken(stringBuilder.toString()));
                             stringBuilder = null;
                             break;
                         }
                     } while (Character.isLetter(peek) || Character.isDigit(peek) || peek == '_');
                     if (stringBuilder != null) {
-                        tokenList.add(new Word(stringBuilder.toString()));
+                        tokenList.add(new IdentifierToken(stringBuilder.toString()));
                         stringBuilder = null;
                     }
                 }
@@ -148,7 +148,7 @@ class FileParser {
                     if (stringBuilder == null) {
                         stringBuilder = new StringBuilder();
                     } else {
-                        tokenList.add(new Word(stringBuilder.toString()));
+                        tokenList.add(new IdentifierToken(stringBuilder.toString()));
                         stringBuilder = new StringBuilder();
                     }
                     stringBuilder.append(peek);
@@ -180,7 +180,7 @@ class FileParser {
                                 peek = line.charAt(i);
                                 if (peek == '=') {
                                     stringBuilder.append(peek);
-                                    tokenList.add(new Word(stringBuilder.toString()));
+                                    tokenList.add(new IdentifierToken(stringBuilder.toString()));
                                     stringBuilder = null;
                                     if (isAppropriate(line.charAt(i + 1))) {
                                         throw new TypeNotPresentException("the one, you wrote is", null);
@@ -188,11 +188,11 @@ class FileParser {
                                 } else {
                                     if (Character.isLetter(peek) || Character.isDigit(peek) || peek == ' ' || peek == '\t' || peek == '\n') {
                                         if (peek != ' ' && peek != '\t' && peek != '\n') {
-                                            tokenList.add(new Word(stringBuilder.toString()));
+                                            tokenList.add(new IdentifierToken(stringBuilder.toString()));
                                             stringBuilder = new StringBuilder();
                                             stringBuilder.append(peek);
                                         } else {
-                                            tokenList.add(new Word(stringBuilder.toString()));
+                                            tokenList.add(new IdentifierToken(stringBuilder.toString()));
                                             stringBuilder = null;
                                         }
                                     } else throw new TypeNotPresentException("the one, you wrote is", null);
@@ -227,11 +227,11 @@ class FileParser {
     private void checkNext(Character peek){
         if(Character.isLetter(peek) || Character.isDigit(peek) || peek == ' ' || peek == '\t' || peek == '\n') {
             if(peek != ' ' && peek != '\t') {
-                tokenList.add(new Word(stringBuilder.toString()));
+                tokenList.add(new IdentifierToken(stringBuilder.toString()));
                 stringBuilder = new StringBuilder();
                 stringBuilder.append(peek);
             }else{
-                tokenList.add(new Word(stringBuilder.toString()));
+                tokenList.add(new IdentifierToken(stringBuilder.toString()));
                 stringBuilder = null;
             }
         }

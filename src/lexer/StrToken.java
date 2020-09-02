@@ -5,7 +5,7 @@ package lexer;
  */
 public class StrToken extends Token {
     public final String str;
-    public int tag;
+    public Tag tag;
     public StrToken(String str) {
         super(Tag.STR_TOKEN);
         this.str = str;
@@ -13,6 +13,6 @@ public class StrToken extends Token {
 
     @Override
     public String toString() {
-        return "" + str;
+        return "StrToken(" + str + ")";
     }
 }
