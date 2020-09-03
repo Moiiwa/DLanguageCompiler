@@ -15,6 +15,8 @@ class FileParser {
 
     private boolean isString = false;
 
+    private boolean isSingleQuoteString = false;
+
     public List<Token> tokenList = new LinkedList<>();
 
     private StringBuilder stringBuilder;
@@ -66,7 +68,7 @@ class FileParser {
         stringBuilder = null;
         for (int i = 0; i < line.length(); ++i) {
             peek = line.charAt(i);
-            if(!isString) {
+            if(!isString && !isSingleQuoteString) {
                 if (peek == ' ' || peek == '\t' || peek == '\n') {
                     if (stringBuilder != null)
                         scan(stringBuilder.toString());
@@ -166,17 +168,28 @@ class FileParser {
                         case '=':
                         case ';':
                         case '(':
-                        case ')':
                         case '[':
-                        case ']':
                         case '{':
-                        case '}':
                         case ',':
                         case '-': {
                             if (i + 1 < line.length()) {
                                 i += 1;
                                 peek = line.charAt(i);
                                 checkNext(peek);
+                            }
+                            else{
+                                tokenList.add(new Word(stringBuilder.toString()));
+                                stringBuilder = null;
+                            }
+                            break;
+                        }
+                        case ')':
+                        case ']':
+                        case '}':{
+                            if (i + 1 < line.length()) {
+                                i += 1;
+                                peek = line.charAt(i);
+                                checkNextForClosingBrackets(peek);
                             }
                             else{
                                 tokenList.add(new Word(stringBuilder.toString()));
@@ -240,19 +253,29 @@ class FileParser {
             }else{
                 stringBuilder.append(peek);
             }
-            if(peek == '\"') {
+            if(peek == '\"'||peek == '\'') {
                 if (stringBuilder == null) {
                     stringBuilder = new StringBuilder();
                 }
                 stringBuilder.append(peek);
-                if(isString){
+                if((isString && peek != '\'') || (peek!='\"' && isSingleQuoteString)){
                     stringBuilder.delete(stringBuilder.length()-2,stringBuilder.length()-1);
                     tokenList.add(new StrToken(stringBuilder.toString()));
                     System.out.println(stringBuilder.toString());
                     stringBuilder = null;
                     isString = false;
-                }else {
-                    isString = true;
+                    isSingleQuoteString = false;
+                } else if(isString == false && isSingleQuoteString == false){
+                    if (peek == '\"') {
+                        isString = true;
+                    }
+                    else{
+                        isSingleQuoteString = true;
+                    }
+                } else if(isString == true && peek == '\''){
+                    throw new TypeNotPresentException("the one, you wrote is", null);
+                } else if(isSingleQuoteString == true && peek == '\"'){
+                    throw new TypeNotPresentException("the one, you wrote is", null);
                 }
             }
         }
@@ -260,6 +283,21 @@ class FileParser {
 
     private void checkNext(Character peek){
         if(Character.isLetter(peek) || Character.isDigit(peek) || peek == ' ' || peek == '\t' || peek == '\n') {
+            if(peek != ' ' && peek != '\t') {
+                tokenList.add(new Word(stringBuilder.toString()));
+                stringBuilder = new StringBuilder();
+                stringBuilder.append(peek);
+            }else{
+                tokenList.add(new Word(stringBuilder.toString()));
+                stringBuilder = null;
+            }
+        }
+        else throw new TypeNotPresentException("the one, you wrote is", null);
+
+    }
+
+    private void checkNextForClosingBrackets(Character peek){
+        if(Character.isLetter(peek) || Character.isDigit(peek) || peek == ' ' || peek == '\t' || peek == '\n' || peek==',') {
             if(peek != ' ' && peek != '\t') {
                 tokenList.add(new Word(stringBuilder.toString()));
                 stringBuilder = new StringBuilder();
