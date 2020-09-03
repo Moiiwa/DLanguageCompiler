@@ -74,4 +74,6 @@ enum Tag {
 
     // Other
     COMMA,
+    COLON,
+    DOUBLE_DOT
 }

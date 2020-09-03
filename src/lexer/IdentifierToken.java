@@ -8,7 +8,7 @@ public class IdentifierToken extends Token {
 
     public IdentifierToken(String lexeme) {
         super(Tag.IDENTIFIER);
-        this.lexeme = new String(lexeme);
+        this.lexeme = lexeme;
     }
 
     @Override

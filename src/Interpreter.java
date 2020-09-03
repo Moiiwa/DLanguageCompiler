@@ -1,12 +1,13 @@
-import java.util.Iterator;
+
+import lexer.Lexer;
 
 public class Interpreter {
 
     public static void main(String[] args) {
-        FileParser parser = new FileParser();
+        Lexer lexer = new Lexer();
         try {
-            parser.ParseFile("/Users/mihailgudkov/IdeaProjects/DLanguageInterpreter/test_cases/2.d");
-            System.out.println(parser.tokenList.size());
+            lexer.ParseFile("/Users/mihailgudkov/IdeaProjects/DLanguageInterpreter/test_cases/1.d");
+            System.out.println(lexer.tokenList.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
