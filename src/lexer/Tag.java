@@ -1,78 +1,77 @@
 package lexer;
 
-public class Tag {
-    public final static int
-        ID = 256, // identifier
-        INT_TOKEN = 257,
-        REAL_TOKEN = 258,
-        STR_TOKEN = 259,
+enum Tag {
+    // Token types
+    IDENTIFIER,
+    SEPARATOR, // statement separator (semicolon or new line)
+    INT_TOKEN,
+    REAL_TOKEN,
+    STR_TOKEN,
 
-        // Types
-        INT = 260,
-        REAL = 261,
-        BOOL = 262,
-        STRING = 263,
-        EMPTY = 264,
-        FUNC = 265,
+    // Type indicators
+    INT,
+    REAL,
+    BOOL,
+    STRING,
+    EMPTY,
+    FUNC,
 
-        // Boolean literals
-        TRUE = 266,
-        FALSE = 267,
+    // Boolean literals
+    TRUE,
+    FALSE,
 
-        // Logical operators
-        AND = 270,
-        OR = 271,
-        XOR = 272,
-        LT = 273,
-        LE = 274,
-        GT = 275,
-        GE = 276,
-        NE = 277,
-        NOT = 278,
-        EQ = 279,
+    // Logical operators
+    OR,
+    AND,
+    XOR,
+    LT,
+    LE,
+    GT,
+    GE,
+    EQ,
+    NE,
+    NOT,
 
-        // Is, In operator
-        IS = 290,
-        IN = 291,
+    // Is, In operator
+    IS,
+    IN,
 
-        // Input/Output
-        READ_INT = 300,
-        READ_REAL = 301,
-        READ_STRING = 302,
-        PRINT = 303,
+    // Input/Output
+    READ_INT,
+    READ_REAL,
+    READ_STRING,
+    PRINT,
 
-        // Control flow
-        RETURN = 310,
-        IF = 311,
-        THEN = 312,
-        ELSE = 313,
-        END = 314,
-        WHILE = 315,
-        FOR = 316,
-        LOOP = 317,
-        LAMBDA = 318,
-        BEGIN = 319,
+    // Control flow
+    RETURN,
+    IF,
+    THEN,
+    ELSE,
+    END,
+    WHILE,
+    FOR,
+    LOOP,
+    LAMBDA,
+    BEGIN,
 
-        // Basic
-        VAR = 320,
-        ASSIGN = 321,
+    // Basic
+    VAR,
+    ASSIGN,
 
-        //Unsorted
-        OPFIGBR = 330, //{
-        CLFIGBR = 331, //}
-        OPBR = 332,    //(
-        CLBR = 333,    //)
-        OPSQBR = 334,  //[
-        CLSQBR = 335,  //]
-        COMMA = 336,   //,
-        SMCLN = 337,   //;
-        CLN =338,      //:
+    // Arithmetic operators
+    PLUS,
+    MINUS,
+    MULT,
+    DIV,
 
-        //Arithmetic operators
-        PLUS = 340,
-        MINUS = 341,
-        MULT = 342,
-        DIV = 343;
+    // Brackets
+    OPEN_RND_BR, // round brackets (parentheses)
+    CLOS_RND_BR,
+    OPEN_CRL_BR, // curly brackets (braces)
+    CLOS_CRL_BR,
+    OPEN_SQR_BR, // square brackets (brackets)
+    CLOS_SQR_BR,
 
-
+    // Other
+    COMMA,
 }
