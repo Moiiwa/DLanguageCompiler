@@ -423,34 +423,35 @@ public class Lexer {
     Tag returnTag(String lexeme){
         Tag tag;
         switch (lexeme.toLowerCase()){
-            case "int":{tag =Tag.INT; return tag;}
-            case "real":{tag =Tag.REAL; return tag;}
-            case "bool":{tag =Tag.BOOL; return tag;}
-            case "empty":{tag =Tag.EMPTY; return tag;}
-            case "func":{tag =Tag.FUNC; return tag;}
-            case "true":{tag =Tag.TRUE; return tag;}
-            case "false":{tag =Tag.FALSE; return tag;}
-            case "and":{tag =Tag.AND; return tag;}
-            case "or":{tag =Tag.OR; return tag;}
-            case "xor":{tag =Tag.XOR; return tag;}
-            case "not":{tag =Tag.NOT; return tag;}
-            case "is":{tag =Tag.IS; return tag;}
-            case "in":{tag =Tag.IN; return tag;}
-            case "readint":{tag =Tag.READ_INT; return tag;}
-            case "readreal":{tag =Tag.READ_REAL; return tag;}
-            case "readstring":{tag =Tag.READ_STRING; return tag;}
-            case "print":{tag =Tag.PRINT; return tag;}
-            case "return":{tag =Tag.RETURN; return tag;}
-            case "if":{tag =Tag.IF; return tag;}
-            case "then":{tag =Tag.THEN; return tag;}
-            case "else":{tag =Tag.ELSE; return tag;}
-            case "end":{tag =Tag.END; return tag;}
-            case "while":{tag =Tag.WHILE; return tag;}
-            case "for":{tag =Tag.FOR; return tag;}
-            case "loop":{tag =Tag.LOOP; return tag;}
-            case "begin":{tag =Tag.BEGIN; return tag;}
-            case "var":{tag =Tag.VAR; return tag;}
-            case "lambda":{tag =Tag.LAMBDA; return tag;}
+            case "int":{tag = Tag.INT; return tag;}
+            case "string":{tag = Tag.STRING; return tag;}
+            case "real":{tag = Tag.REAL; return tag;}
+            case "bool":{tag = Tag.BOOL; return tag;}
+            case "empty":{tag = Tag.EMPTY; return tag;}
+            case "func":{tag = Tag.FUNC; return tag;}
+            case "true":{tag = Tag.TRUE; return tag;}
+            case "false":{tag = Tag.FALSE; return tag;}
+            case "and":{tag = Tag.AND; return tag;}
+            case "or":{tag = Tag.OR; return tag;}
+            case "xor":{tag = Tag.XOR; return tag;}
+            case "not":{tag = Tag.NOT; return tag;}
+            case "is":{tag = Tag.IS; return tag;}
+            case "in":{tag = Tag.IN; return tag;}
+            case "readint":{tag = Tag.READ_INT; return tag;}
+            case "readreal":{tag = Tag.READ_REAL; return tag;}
+            case "readstring":{tag = Tag.READ_STRING; return tag;}
+            case "print":{tag = Tag.PRINT; return tag;}
+            case "return":{tag = Tag.RETURN; return tag;}
+            case "if":{tag = Tag.IF; return tag;}
+            case "then":{tag = Tag.THEN; return tag;}
+            case "else":{tag = Tag.ELSE; return tag;}
+            case "end":{tag = Tag.END; return tag;}
+            case "while":{tag = Tag.WHILE; return tag;}
+            case "for":{tag = Tag.FOR; return tag;}
+            case "loop":{tag = Tag.LOOP; return tag;}
+            case "begin":{tag = Tag.BEGIN; return tag;}
+            case "var":{tag = Tag.VAR; return tag;}
+            case "lambda":{tag = Tag.LAMBDA; return tag;}
 
         }
 
