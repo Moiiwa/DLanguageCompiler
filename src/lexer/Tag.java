@@ -1,6 +1,6 @@
 package lexer;
 
-enum Tag {
+public enum Tag {
     // Token types
     IDENTIFIER,
     SEPARATOR, // statement separator (semicolon or new line)
