@@ -1,5 +1,5 @@
 var array := [5, 1, 4, 2, 3]
-var len := 7
+var len := 5
 var maxi := 0
 
 var i
