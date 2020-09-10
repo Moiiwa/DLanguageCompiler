@@ -8,7 +8,7 @@
 %token READ_INT READ_REAL READ_STR PRINT
 %token RETURN IF THEN ELSE END WHILE FOR LOOP LAMBDA RANGE
 %token VAR ASSIGN
-%token PLUS MINUS MULT DIV
+%token PLUS MINUS MULT DIVgit st
 %token LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET
 %token COMMA DOT
 
@@ -53,9 +53,6 @@ VariableDefinition
 
 VariableDefinitionTail
     : ASSIGN Expression
-    | ASSIGN Literal
-    | ASSIGN FunctionLiteral
-    | ASSIGN IDENTIFIER
     ;
 
 Assignment
@@ -144,6 +141,7 @@ Unary
     : Reference
     | Reference IS TypeIndicator
     | UnaryOperator Primary
+    | Primary
     ;
 
 UnaryOperator
