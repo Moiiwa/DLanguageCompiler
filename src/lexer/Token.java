@@ -16,4 +16,7 @@ public class Token {
         return "Token(" + tag + ")";
     }
 
+    public Tag getTag() {
+        return tag;
+    }
 }

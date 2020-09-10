@@ -32,16 +32,16 @@ package bison;/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* First part of user declarations.  */
 
-/* "parser.java":36  */ /* lalr1.java:91  */
+/* "YYParser.java":36  */ /* lalr1.java:91  */
 
-/* "parser.java":38  */ /* lalr1.java:92  */
+/* "YYParser.java":38  */ /* lalr1.java:92  */
 
 /**
  * A Bison parser, automatically generated from <tt>parser.y</tt>.
  *
  * @author LALR (1) parser skeleton written by Paolo Bonzini.
  */
-class YYParser
+public class YYParser
 {
     /** Version number for the Bison executable that generated this parser.  */
   public static final String bisonVersion = "3.0.4";
@@ -406,7 +406,7 @@ class YYParser
     switch (yyn)
       {
         
-/* "parser.java":410  */ /* lalr1.java:489  */
+/* "YYParser.java":410  */ /* lalr1.java:489  */
         default: break;
       }
 

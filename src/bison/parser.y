@@ -53,6 +53,9 @@ VariableDefinition
 
 VariableDefinitionTail
     : ASSIGN Expression
+    | ASSIGN Literal
+    | ASSIGN FunctionLiteral
+    | ASSIGN IDENTIFIER
     ;
 
 Assignment

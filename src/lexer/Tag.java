@@ -75,5 +75,6 @@ public enum Tag {
     // Other
     COMMA,
     COLON,
-    DOUBLE_DOT
+    DOUBLE_DOT,
+    EOF
 }
