@@ -1,9 +1,7 @@
 package lexer;
-
+import bison.YYParser;
 import java.io.*;
 import java.util.*;
-
-import bison.YYParser;
 
 
 public class Lexer implements YYParser.Lexer{

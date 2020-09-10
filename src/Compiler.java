@@ -1,6 +1,7 @@
 
 import lexer.*;
 import bison.YYParser;
+
 public class Compiler {
 
     public static void main(String[] args) {
