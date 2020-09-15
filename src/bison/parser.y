@@ -29,7 +29,8 @@ StatementList
     ;
 
 Statement
-    : Declaration
+    :
+    | Declaration
     | Assignment
     | If
     | Loop
@@ -43,7 +44,7 @@ Declaration
 
 VariableDefinitions
     : VariableDefinition
-    | VariableDefinitions VariableDefinition
+    | VariableDefinitions COMMA VariableDefinition
     ;
 
 VariableDefinition
@@ -70,7 +71,12 @@ IfTail
 
 Loop
     : WHILE Expression LOOP Body END
-    | FOR IDENTIFIER IN Expression RANGE Expression LOOP Body END
+    | FOR IDENTIFIER IN Expression RANGE Expression LOOP LoopBody END
+    ;
+
+LoopBody
+    :Body
+    |Body SEPARATOR
     ;
 
 Body
