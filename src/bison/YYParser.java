@@ -411,13 +411,14 @@ public class YYParser
       }
 
     yy_symbol_print ("-> $$ =", yyr1_[yyn], yyval);
-
     yystack.pop (yylen);
+
     yylen = 0;
 
     /* Shift the result of the reduction.  */
     int yystate = yy_lr_goto_state_ (yystack.stateAt (0), yyr1_[yyn]);
     yystack.push (yystate, yyval);
+    System.out.println(yystack.valueAt(yystack.height));
     return YYNEWSTATE;
   }
 
@@ -555,6 +556,7 @@ public class YYParser
               --yyerrstatus_;
 
             yystate = yyn;
+            System.out.println(yylval);
             yystack.push (yystate, yylval);
             label = YYNEWSTATE;
           }
@@ -653,7 +655,6 @@ public class YYParser
             if (yystack.height == 0)
               return false;
 
-            
             yystack.pop ();
             yystate = yystack.stateAt (0);
             if (yydebug > 0)
@@ -671,6 +672,7 @@ public class YYParser
                          yylval);
 
         yystate = yyn;
+        System.out.println(yylval);
         yystack.push (yyn, yylval);
         label = YYNEWSTATE;
         break;

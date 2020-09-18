@@ -1,4 +1,5 @@
 
+import bison.ASTBuilder;
 import lexer.*;
 import bison.YYParser;
 
@@ -10,8 +11,11 @@ public class Compiler {
             lexer.ParseFile("/Users/mihailgudkov/IdeaProjects/DLanguageCompiler/test_cases/test02.d");
             System.out.println(lexer.tokenList.size());
             YYParser parser = new YYParser(lexer);
+            ASTBuilder astBuilder = new ASTBuilder(lexer.tokenList);
             lexer.setIterator(lexer.tokenList.iterator());
             System.out.println(parser.parse());
+            astBuilder.buildTree();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
