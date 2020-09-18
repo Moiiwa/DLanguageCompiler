@@ -38,6 +38,22 @@
 %type <Token> FactorOperator
 %type <Term> Term
 %type <Token> TermOperator
+%type <Unary> Unary
+%type <IsStatement> Is
+%type <Token> UnaryOperator
+%type <Token> TypeIndicator
+%type <Primary> Primary
+%type <Function> FunctionLiteral
+%type <ArrayList<Identifier>> Parameters
+%type <ArrayList<Identifier>> Identifiers
+%type <FunctionBody> FunBody
+%type <Reference> Reference
+%type <Literal> Literal
+%type <Token> Boolean
+%type <Array> Array
+%type <Tuple> Tuple
+%type <List<TupleElement>> TupleElements
+%type <TupleElement> TupleElement
 
 
 %%
@@ -186,11 +202,16 @@ TermOperator
     ;
 
 Unary
-    : Reference
-    | Reference IS TypeIndicator
-    | UnaryOperator Primary
-    | Primary
+    : Reference  { $$ = new Unary($1); }
+    | Is  { $$ = new Unary($1); }
+    | Primary  { $$ = new Unary($1); }
+    | UnaryOperator Primary  { $$ = new Unary($2, $1); }
     ;
+
+Is
+    : Reference IS TypeIndicator  { $$ = new IsStatement($1, $3); }
+    ;
+
 
 UnaryOperator
     : PLUS
@@ -210,69 +231,81 @@ TypeIndicator
     ;
 
 Primary
-    : Literal
-    | READ_INT
-    | READ_REAL
-    | READ_STR
-    | FunctionLiteral
-    | LPAREN Expression RPAREN
+    : Literal  { $$ = new Primary($1); }
+    | READ_INT  { $$ = new Primary($1); }
+    | READ_REAL  { $$ = new Primary($1); }
+    | READ_STR  { $$ = new Primary($1); }
+    | FunctionLiteral  { $$ = new Primary($1); }
+    | LPAREN Expression RPAREN  { $$ = new Primary($2); }
     ;
 
 FunctionLiteral
     : FUNC_TYPE LPAREN Parameters RPAREN FunBody
+        {
+            $$ = new Function($3, $5);
+        }
     ;
 
 Parameters
-    : // empty
-    | Identifiers;
+    :   { $$ = new ArrayList<Identifier>(); }
+    | Identifiers;  { $$ = $1; }
     ;
 
 Identifiers
     : IDENTIFIER
-    | Identifiers COMMA Identifiers;
+        {
+            $$ = new ArrayList<Identifier>();
+            $$.add($1);
+        }
+    | Identifiers COMMA Identifiers;  { $1.add($3); }
 
 FunBody
-    : IS Body END LAMBDA Expression
+    : IS Body END { $$ = new FunctionBody($2); }
+    | LAMBDA Expression  { $$ = new FunctionBody($2); }
     ;
 
 Reference
-    : IDENTIFIER
-    | Reference LBRACKET Expression RBRACKET
-    | Reference LBRACE Expression RBRACE
-    | Reference DOT IDENTIFIER
+    : IDENTIFIER  { $$ = new Reference($1); }
+    | Reference LBRACKET Expression RBRACKET  { $$ = new ArrayReference($1, $3); }
+    | Reference LPAREN Expression RPAREN  {$$ = new FunctionReference($1, $3); }
+    | Reference DOT IDENTIFIER  { $$ = new TupleReference($1, $3); }
     ;
 
 Literal
-    : INT_LITERAL
-    | REAL_LITERAL
-    | STR_LITERAL
-    | Boolean
-    | Tuple
-    | Array
-    | EMPTY_TYPE
+    : INT_LITERAL  { $$ = new Literal($$1); }
+    | REAL_LITERAL  { $$ = new Literal($$1); }
+    | STR_LITERAL  { $$ = new Literal($$1); }
+    | Boolean  { $$ = new Literal($$1); }
+    | Tuple  { $$ = new Literal($$1); }
+    | Array  { $$ = new Literal($$1); }
+    | EMPTY_TYPE  { $$ = new Literal($$1); }
     ;
 
 Boolean
-    : TRUE
-    | FALSE
+    : TRUE  { $$ = $1; }
+    | FALSE  { $$ = $1; }
     ;
 
 Array
-    : LBRACKET Expressions RBRACKET
+    : LBRACKET Expressions RBRACKET  { $$ = new Array($2); }
     ;
 
 
 Tuple
-    : LBRACE TupleElements RBRACE
+    : LBRACE TupleElements RBRACE  { $$ = new Tuple($2); }
     ;
 
 TupleElements
-    : TupleElement
-    | TupleElements COMMA TupleElement
+    : TupleElement  
+        { 
+            $$ = new ArrayList<TupleElement>();
+            $$.add($1);
+        }
+    | TupleElements COMMA TupleElement  { $1.add($3); }
     ;
 
 TupleElement
-    : Expression
-    | IDENTIFIER ASSIGN Expression
+    : Expression  { $$ = new TupleElement(Expression); }
+    | IDENTIFIER ASSIGN Expression  { $$ = new TupleElement($1, $3); }
     ;
 
