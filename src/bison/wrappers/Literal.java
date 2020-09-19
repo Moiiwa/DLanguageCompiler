@@ -2,10 +2,10 @@ package bison.wrappers;
 
 public class Literal {
 
-    lexer.Token token;
+    Token token;
     Tuple tuple;
     Array array;
-    public Literal(lexer.Token token){
+    public Literal(Token token){
         this.token = token;
     }
 

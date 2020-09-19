@@ -1,4 +1,4 @@
 package bison.wrappers;
 
-public class ExpressionOperator {
+public interface ExpressionOperator {
 }

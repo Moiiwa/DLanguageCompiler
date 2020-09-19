@@ -8,7 +8,7 @@ public class Term {
          list.add(unary);
     }
 
-    public void add(Unary unary, lexer.Token token){
+    public void add(Unary unary, Token token){
         list.add(unary);
         list.add(token);
     }

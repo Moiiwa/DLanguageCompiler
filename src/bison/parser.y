@@ -7,7 +7,7 @@
 %token OR AND XOR LT LE GT GE EQ NE NOT
 %token IS IN
 %token READ_INT READ_REAL READ_STR PRINT
-%token RETURN IF THEN ELSE END WHILE FOR LOOP LAMBDA TWO_DOTS RANGE
+%token RETURN IF THEN ELSE END WHILE FOR LOOP LAMBDA TWO_DOTS
 %token VAR ASSIGN
 %token PLUS MINUS MULT DIV
 %token LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET
@@ -75,33 +75,33 @@ Statements
     | Statement  
         { 
             $$ = new ArrayList<Statement>();
-            ((List<Statement>)$$).add($1);
+            ((ArrayList<Statement>)$$).add($1);
         }
     | Statements SEPARATOR  {}
-    | Statements SEPARATOR Statement { ((List<Statement>)$1).add($3); }
+    | Statements SEPARATOR Statement { $1.add($3); }
     ;
 
 Statement
-    : Declaration { $$ = $1; }
-    | Assignment  { $$ = $1; }
-    | If  { $$ = $1; }
-    | Loop  { $$ = $1; }
-    | Return  { $$ = $1; }
-    | Print  { $$ = $1; }
+    : Declaration  { $$ = new Statement($1); }
+    | Assignment  { $$ = new Statement($1); }
+    | If  { $$ = new Statement($1); }
+    | Loop  { $$ = new Statement($1); }
+    | Return  { $$ = new Statement($1); }
+    | Print  { $$ = new Statement($1); }
     ;
 
 Declaration
-    : VAR VariableDefinitions  { $$ = new Declaration($1); }
+    : VAR VariableDefinitions  { $$ = new Declaration($1, $2); }
     ;
 
 VariableDefinitions
-    : VariableDefinition  { $$ = new ArrayList<VariableDefinition>(); }
-    | VariableDefinitions COMMA VariableDefinition { ((List<VariableDefinition>)$1).add($3); }
+    : VariableDefinition  { $$ = new ArrayList<VariableDefinition>(); ((ArrayList<VariableDefinition>)$$).add($1);}
+    | VariableDefinitions COMMA VariableDefinition  { ((ArrayList<VariableDefinition>)$1).add($3); }
     ;
 
 VariableDefinition
-    : IDENTIFIER   { $$ = new VariableDefinition((Identifier)$1); }
-    | IDENTIFIER VariableDefinitionTail  {$$ = new VariableDefinition((Identifier)$1, (Expression)$2); }
+    : IDENTIFIER   { $$ = new VariableDefinition($1); }
+    | IDENTIFIER VariableDefinitionTail  {$$ = new VariableDefinition($1, $2); }
     ;
 
 VariableDefinitionTail
@@ -109,16 +109,16 @@ VariableDefinitionTail
     ;
 
 Assignment
-    : Reference ASSIGN Expression  { $$ = new Assignment((Reference)$1, (Expression)$3); }
+    : Reference ASSIGN Expression  { $$ = new Assignment($1, $3); }
     ;
 
 If
     : IF Expression THEN Body IfTail  
         {
             if ($5 instanceof Body) {  // there is an else body
-                $$ = new IfStatement((Expression)$2, (Body)$4, (Body)$5);
+                $$ = new IfStatement($2, $4, $5);
             } else {
-                $$ = new IfStatement((Expression)$2, (Body)$4);
+                $$ = new IfStatement($2, $4);
             }
         }
     ;
@@ -129,29 +129,29 @@ IfTail
     ;
 
 Loop
-    : WHILE Expression LOOP Body END  { $$ = new WhileLoop((Expression)$2, (Body)$4); }
+    : WHILE Expression LOOP Body END  { $$ = new WhileLoop($2, $4); }
     | FOR IDENTIFIER IN Range LOOP Body END
         {
-            $$ = new ForLoop((Identifier)$2, (Range)$4, (Body)$6);
+            $$ = new ForLoop($2, $4, $6);
         }
     ;
 
 Range
-    : Expression TWO_DOTS Expression  { $$ = new Range((Expression)$1, (Expression)$3); }
+    : Expression TWO_DOTS Expression  { $$ = new Range($1, $3); }
     ;
 
 Body
-    : Statements  { $$ = new Body((ArrayList<Statement>)$1); }
+    : Statements  { $$ = new Body($1); }
     ;
 
 Return
-    : RETURN  { $$ = new ReturnStatement(); }
-    | RETURN Expression { $$ = new ReturnStatement((Expression)$2); }
+    : RETURN   { $$ = new ReturnStatement(); }
+    | RETURN Expression { $$ = new ReturnStatement($2); }
     ;
 
 Print
     : PRINT  { $$ = new PrintStatement(new ArrayList<Expression>()); }
-    | PRINT Expressions { $$ = new PrintStatements((ArrayList<Expression>)$2); }
+    | PRINT Expressions  { $$ = new PrintStatements($2); }
     ;
 
 Expressions
@@ -160,12 +160,12 @@ Expressions
             $$ = new ArrayList<Expression>();
             ((List<Expression>)$$).add($1);
         }
-    | Expressions COMMA Expression  { ((List<Expression>)$$).add((Expression)$3); }
+    | Expressions COMMA Expression  { ((ArrayList<Expression>)$$).add($3); }
     ;
 
 Expression
-    : Relation  { $$ = new Expression((Relation)$1); }
-    | Expression ExpressionOperator Relation  { ((Expression)$$).add((Relation)$3, (ExpressionOperator)$2); }
+    : Relation  { $$ = new Expression($1); }
+    | Expression ExpressionOperator Relation  { ((Expression)$$).add($3, $2); }
     ;
 
 ExpressionOperator
@@ -175,8 +175,8 @@ ExpressionOperator
     ;
 
 Relation
-    : Factor  { $$ = new Relation((Factor)$1); }
-    | Relation RelationOperator Factor  { ((Factor)$$).add((Factor)$3, (RelationOperator)$2); }
+    : Factor  { $$ = new Relation($1); }
+    | Relation RelationOperator Factor  { ((Relation)$$).add($3, $2); }
     ;
 
 RelationOperator
@@ -189,8 +189,8 @@ RelationOperator
     ;
 
 Factor
-    : Term  { $$ = new Factor((Term)$1); }
-    | Factor FactorOperator Term  { ((Factor)$$).add((Term)$3, (FactorOperator)$2); }
+    : Term  { $$ = new Factor($1); }
+    | Factor FactorOperator Term  { ((Factor)$$).add($3, $2); }
     ;
 
 FactorOperator
@@ -199,8 +199,8 @@ FactorOperator
     ;
 
 Term
-    : Unary  { $$ = new Term((Unary)$1); }
-    | Term TermOperator Unary  { ((Term)$$).add((Unary)$3, (Token)$2); }
+    : Unary  { $$ = new Term($1); }
+    | Term TermOperator Unary  { ((Term)$$).add($3, $2); }
     ;
 
 TermOperator
@@ -209,14 +209,14 @@ TermOperator
     ;
 
 Unary
-    : Reference  { $$ = new Unary((Reference)$1); }
-    | Is  { $$ = new Unary((IsStatement)$1); }
-    | Primary  { $$ = new Unary((Primary)$1); }
-    | UnaryOperator Primary  { $$ = new Unary((Primary)$2, (Token)$1); }
+    : Reference  { $$ = new Unary($1); }
+    | Is  { $$ = new Unary($1); }
+    | Primary  { $$ = new Unary($1); }
+    | UnaryOperator Primary  { $$ = new Unary($2, $1); }
     ;
 
 Is
-    : Reference IS TypeIndicator  { $$ = new IsStatement((Reference)$1, (TypeIndicator)$3); }
+    : Reference IS TypeIndicator  { $$ = new IsStatement($1, $3); }
     ;
 
 
@@ -238,18 +238,18 @@ TypeIndicator
     ;
 
 Primary
-    : Literal  { $$ = new Primary((Literal)$1); }
-    | READ_INT  { $$ = new Primary((Token)$1); }
-    | READ_REAL  { $$ = new Primary((Token)$1); }
-    | READ_STR  { $$ = new Primary((Token)$1); }
-    | FunctionLiteral  { $$ = new Primary((Function)$1); }
-    | LPAREN Expression RPAREN  { $$ = new Primary((Expression)$2); }
+    : Literal  { $$ = new Primary($1); }
+    | READ_INT  { $$ = new Primary($1); }
+    | READ_REAL  { $$ = new Primary($1); }
+    | READ_STR  { $$ = new Primary($1); }
+    | FunctionLiteral  { $$ = new Primary($1); }
+    | LPAREN Expression RPAREN  { $$ = new Primary($2); }
     ;
 
 FunctionLiteral
     : FUNC_TYPE LPAREN Parameters RPAREN FunBody
         {
-            $$ = new Function((ArrayList<Identifier>)$3, (FunctionBody)$5);
+            $$ = new Function($3, $5);
         }
     ;
 
@@ -262,30 +262,35 @@ Identifiers
     : IDENTIFIER
         {
             $$ = new ArrayList<Identifier>();
-            ((List<Identifier>)$$).add($1);
+            ((ArrayList<Identifier>)$$).add($1);
         }
-    | Identifiers COMMA Identifiers  { ((List<Identifier>)$1).add((List<Identifier>)$3); }
+    | Identifiers COMMA Identifiers  {
+        ArrayList<Identifier> list = $3;
+        for (Identifier identifier: list){
+            $1.add(identifier);
+        }
+    }
     ;
 FunBody
-    : IS Body END { $$ = new FunctionBody((Body)$2); }
-    | LAMBDA Expression  { $$ = new FunctionBody((Expression)$2); }
+    : IS Body END  { $$ = new FunctionBody($2); }
+    | LAMBDA Expression  { $$ = new FunctionBody($2); }
     ;
 
 Reference
-    : IDENTIFIER  { $$ = new Reference((Token)$1); }
-    | Reference LBRACKET Expression RBRACKET  { $$ = new ArrayReference((Reference)$1, (Expression)$3); }
-    | Reference LPAREN Expression RPAREN  {$$ = new FunctionReference((Reference)$1, (Expression)$3); }
-    | Reference DOT IDENTIFIER  { $$ = new TupleReference((Reference)$1, (Token)$3); }
+    : IDENTIFIER  { $$ = new Reference($1); }
+    | Reference LBRACKET Expression RBRACKET  { $$ = new ArrayReference($1, $3); }
+    | Reference LPAREN Expression RPAREN  {$$ = new FunctionReference($1, $3); }
+    | Reference DOT IDENTIFIER  { $$ = new TupleReference($1, $3); }
     ;
 
 Literal
-    : INT_LITERAL  { $$ = new Literal((Token)$1); }
-    | REAL_LITERAL  { $$ = new Literal((Token)$1); }
-    | STR_LITERAL  { $$ = new Literal((Token)$1); }
-    | Boolean  { $$ = new Literal((Token)$1); }
-    | Tuple  { $$ = new Literal((Tuple)$1); }
-    | Array  { $$ = new Literal((Array)$1); }
-    | EMPTY_TYPE  { $$ = new Literal((Token)$1); }
+    : INT_LITERAL  { $$ = new Literal($1); }
+    | REAL_LITERAL  { $$ = new Literal($1); }
+    | STR_LITERAL  { $$ = new Literal($1); }
+    | Boolean  { $$ = new Literal($1); }
+    | Tuple  { $$ = new Literal($1); }
+    | Array  { $$ = new Literal($1); }
+    | EMPTY_TYPE  { $$ = new Literal($1); }
     ;
 
 Boolean
@@ -294,25 +299,25 @@ Boolean
     ;
 
 Array
-    : LBRACKET Expressions RBRACKET  { $$ = new Array((List<Expression>)$2); }
+    : LBRACKET Expressions RBRACKET  { $$ = new Array($2); }
     ;
 
 
 Tuple
-    : LBRACE TupleElements RBRACE  { $$ = new Tuple((List<TupleElement>)$2); }
+    : LBRACE TupleElements RBRACE  { $$ = new Tuple($2); }
     ;
 
 TupleElements
     : TupleElement  
-        { 
+        {
             $$ = new ArrayList<TupleElement>();
             ((List<TupleElement>)$$).add($1);
         }
-    | TupleElements COMMA TupleElement  { ((List<TupleElement>)$1).add((TupleElement)$3); }
+    | TupleElements COMMA TupleElement  { $1.add($3); }
     ;
 
 TupleElement
-    : Expression  { $$ = new TupleElement((Expression)$1); }
-    | IDENTIFIER ASSIGN Expression  { $$ = new TupleElement((Token)$1, (Expression)$3); }
+    : Expression  { $$ = new TupleElement($1); }
+    | IDENTIFIER ASSIGN Expression  { $$ = new TupleElement($1, $3); }
     ;
 

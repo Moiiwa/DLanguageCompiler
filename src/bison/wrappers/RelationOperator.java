@@ -1,4 +1,4 @@
 package bison.wrappers;
 
-public class RelationOperator {
+public interface RelationOperator {
 }

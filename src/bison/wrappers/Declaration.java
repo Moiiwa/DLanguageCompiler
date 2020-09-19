@@ -1,8 +1,12 @@
 package bison.wrappers;
 
+import java.util.List;
+
 public class Declaration {
     Object value;
-    public Declaration(Declaration declaration){
-        value = declaration;
+    List<VariableDefinition> variableDefinitions;
+    public Declaration(Token token, List<VariableDefinition> variableDefinitions){
+        value = token;
+        this.variableDefinitions = variableDefinitions;
     }
 }

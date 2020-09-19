@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class ForLoop {
+public class ForLoop implements Loop{
 
     Identifier identifier;
     Range range;

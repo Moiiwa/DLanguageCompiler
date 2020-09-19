@@ -5,7 +5,7 @@ import java.util.function.UnaryOperator;
 public class Unary {
     Reference reference;
     Primary primary;
-    lexer.Token unaryOperator;
+    Token unaryOperator;
     IsStatement isStatement;
     public Unary(Reference reference){
         this.reference = reference;
@@ -17,7 +17,7 @@ public class Unary {
         this.primary = primary;
     }
 
-    public Unary(Primary primary, lexer.Token unaryOperator){
+    public Unary(Primary primary, Token unaryOperator){
         this.primary = primary;
         this.unaryOperator = unaryOperator;
     }

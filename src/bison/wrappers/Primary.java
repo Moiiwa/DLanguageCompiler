@@ -3,14 +3,15 @@ package bison.wrappers;
 public class Primary {
 
     Literal literal = null;
-    lexer.Token token = null;
+    Token token = null;
     Function function = null;
     Expression expression = null;
+
     public Primary(Literal literal){
         this.literal = literal;
     }
 
-    public Primary(lexer.Token token){
+    public Primary(Token token){
         this.token = token;
     }
 

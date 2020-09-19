@@ -1,4 +1,4 @@
 package bison.wrappers;
 
-public class Identifier {
+public interface Identifier {
 }

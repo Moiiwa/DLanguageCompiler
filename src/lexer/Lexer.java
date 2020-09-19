@@ -516,7 +516,7 @@ public class Lexer implements YYParser.Lexer{
                 case READ_REAL:{yylex = YYParser.Lexer.READ_REAL; break;}
                 case SEPARATOR:{yylex = YYParser.Lexer.SEPARATOR; break;}
                 case STR_TOKEN:{yylex = YYParser.Lexer.STR_LITERAL; break;}
-                case DOUBLE_DOT:{yylex = YYParser.Lexer.RANGE; break;}
+                case DOUBLE_DOT:{yylex = YYParser.Lexer.TWO_DOTS; break;}
                 case IDENTIFIER:{yylex = YYParser.Lexer.IDENTIFIER; break;}
                 case REAL_TOKEN:{yylex = YYParser.Lexer.REAL_LITERAL; break;}
                 case CLOS_CRL_BR:{yylex = YYParser.Lexer.RBRACE; break;}

@@ -1,4 +1,4 @@
 package bison.wrappers;
 
-public interface Loop {
+public interface Print {
 }
