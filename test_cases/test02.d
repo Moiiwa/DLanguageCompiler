@@ -6,5 +6,4 @@ for i in 1 .. 10 loop
     sum := tmp + i;
 end;
 
-print "Sum of first 10 numbers: ";
-print sum;
+print "Sum of first 10 numbers: ", sum;
