@@ -379,7 +379,7 @@ public class Lexer implements YYParser.Lexer{
     }
 
     private void checkNextForClosingBrackets(Character peek){
-        if(Character.isLetter(peek) || Character.isDigit(peek) || peek == ' ' || peek == '\t' || peek == '\n' || peek==',') {
+        if(Character.isLetter(peek) || Character.isDigit(peek) || peek == ' ' || peek == '\t' || peek == '\n' || peek==',' || peek ==';') {
             if(peek != ' ' && peek != '\t') {
                 Tag tag;
                 switch (stringBuilder.toString()) {
