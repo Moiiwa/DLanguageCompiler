@@ -1,13 +1,13 @@
-var array := [5, 1, 4, 2, 3]
-var len := 7
-var maxi := 0
+var array := [5, 1, 4, 2, 3];
+var len := 7;
+var maxi := 0;
 
-var i
+var i;
 for i in 1 .. len loop
     if a[i] > maxi then
-    maxi := a[i]
-    end
-end
+    maxi := a[i];
+    end;
+end;
 
-print "Maximum number in array is: "
-print maxi
+print "Maximum number in array is: ";
+print maxi;

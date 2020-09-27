@@ -1,2 +1,2 @@
-username = readString
-print "Hello, " + username
+username = readString;
+print "Hello, " + username;
