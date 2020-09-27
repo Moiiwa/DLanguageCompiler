@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class TupleReference {
+public class TupleReference extends Node{
 
     Reference reference;
     Token token;

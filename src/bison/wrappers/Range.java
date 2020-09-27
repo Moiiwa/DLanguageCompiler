@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class Range {
+public class Range extends Node{
 
     Expression expression1;
     Expression expression2;

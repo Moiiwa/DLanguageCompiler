@@ -2,7 +2,7 @@ package bison.wrappers;
 
 import java.util.List;
 
-public class Tuple {
+public class Tuple extends Node{
     List list;
 
     public Tuple(List<TupleElement> list){

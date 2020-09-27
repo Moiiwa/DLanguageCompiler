@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class WhileLoop implements Loop{
+public class WhileLoop extends Node implements Loop{
     Expression expression;
     Body body;
     public WhileLoop(Expression expression, Body body){

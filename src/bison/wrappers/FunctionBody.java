@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class FunctionBody {
+public class FunctionBody extends Node{
 
     Body body;
     Expression expression;

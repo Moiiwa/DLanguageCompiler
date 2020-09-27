@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class Primary {
+public class Primary extends Node{
 
     Literal literal = null;
     Token token = null;

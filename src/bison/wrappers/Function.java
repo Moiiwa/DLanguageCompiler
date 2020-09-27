@@ -2,7 +2,7 @@ package bison.wrappers;
 
 import java.util.ArrayList;
 
-public class Function {
+public class Function extends Node{
 
     ArrayList<Identifier> identifiers;
     FunctionBody functionBody;

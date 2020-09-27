@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class IfStatement {
+public class IfStatement extends Node{
     Expression expression;
     Body thenBody;
     Body elseBody;

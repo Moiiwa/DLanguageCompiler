@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class Literal {
+public class Literal extends Node{
 
     Token token;
     Tuple tuple;

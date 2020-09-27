@@ -2,7 +2,7 @@ package bison.wrappers;
 
 import java.util.ArrayList;
 
-public class Relation {
+public class Relation extends Node{
 
     ArrayList list = new ArrayList();
     public Relation(Factor factor){

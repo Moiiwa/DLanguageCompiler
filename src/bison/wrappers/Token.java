@@ -1,4 +1,4 @@
 package bison.wrappers;
 
-public class Token implements Identifier, ExpressionOperator, FactorOperator, RelationOperator{
+public class Token extends Node implements Identifier, ExpressionOperator, FactorOperator, RelationOperator{
 }

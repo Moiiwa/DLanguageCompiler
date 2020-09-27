@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class TupleElement {
+public class TupleElement extends Node{
 
     Token token;
     Expression expression;

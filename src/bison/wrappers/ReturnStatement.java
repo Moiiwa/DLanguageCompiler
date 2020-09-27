@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class ReturnStatement {
+public class ReturnStatement extends Node{
 
     Expression expression = null;
     public ReturnStatement(Expression expression){

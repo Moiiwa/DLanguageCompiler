@@ -2,7 +2,7 @@ package bison.wrappers;
 
 import java.util.ArrayList;
 
-public class Term {
+public class Term extends Node{
     ArrayList list = new ArrayList();
     public Term(Unary unary){
          list.add(unary);

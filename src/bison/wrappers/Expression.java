@@ -2,8 +2,7 @@ package bison.wrappers;
 
 import java.util.ArrayList;
 
-public class Expression {
-
+public class Expression extends Node{
     ArrayList<Object> relations = new ArrayList<>();
     public Expression(Relation relation){
         relations.add(relation);

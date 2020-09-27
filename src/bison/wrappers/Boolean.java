@@ -1,4 +1,4 @@
 package bison.wrappers;
 
-public class Boolean {
+public class Boolean extends Node{
 }

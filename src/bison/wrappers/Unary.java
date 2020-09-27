@@ -2,7 +2,7 @@ package bison.wrappers;
 
 import java.util.function.UnaryOperator;
 
-public class Unary {
+public class Unary extends Node{
     Reference reference;
     Primary primary;
     Token unaryOperator;

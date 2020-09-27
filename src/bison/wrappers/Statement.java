@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class Statement {
+public class Statement extends Node{
 
     Declaration declaration;
     IfStatement ifStatement;

@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class IsStatement {
+public class IsStatement extends Node{
     Reference reference;
     Token token;
     public IsStatement(Reference reference, Token token){

@@ -1,6 +1,6 @@
 package bison.wrappers;
 
-public class FunctionReference {
+public class FunctionReference extends Node{
 
     Reference reference;
     Expression expression;

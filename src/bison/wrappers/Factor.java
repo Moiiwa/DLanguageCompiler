@@ -2,7 +2,7 @@ package bison.wrappers;
 
 import java.util.ArrayList;
 
-public class Factor {
+public class Factor extends Node{
     ArrayList<Object> terms = new ArrayList<>();
     public Factor(Term term){
         terms.add(term);
