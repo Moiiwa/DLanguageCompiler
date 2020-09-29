@@ -397,8 +397,15 @@ public class Lexer implements YYParser.Lexer{
                     }
                 }
                 tokenList.add(new Token(tag));
-                stringBuilder = new StringBuilder();
-                stringBuilder.append(peek);
+                if (peek == ';'){
+                    tokenList.add(new Token(Tag.SEPARATOR));
+                    stringBuilder = new StringBuilder();
+                }else{
+                    stringBuilder = new StringBuilder();
+                    stringBuilder.append(peek);
+                }
+
+
             }else{
                 Tag tag;
                 switch (stringBuilder.toString()) {
