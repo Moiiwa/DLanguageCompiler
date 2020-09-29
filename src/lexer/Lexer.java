@@ -61,6 +61,7 @@ public class Lexer implements YYParser.Lexer{
             scan(line);
         }while (line!=null);
         tokenList.add(new Token(Tag.EOF));
+        postprocess();
     }
 
     public void scan(String line) throws Exception {
@@ -302,7 +303,8 @@ public class Lexer implements YYParser.Lexer{
                                         throw new TypeNotPresentException("the one, you wrote is", null);
                                     }
                                 } else {
-                                    throw new TypeNotPresentException("the one, you wrote is", null);
+                                    stringBuilder.append(peek);
+                                    //throw new TypeNotPresentException("the one, you wrote is", null);
                                 }
                             }
                         }
@@ -550,5 +552,59 @@ public class Lexer implements YYParser.Lexer{
 
     public Iterator getIterator() {
         return iterator;
+    }
+
+    public void postprocess(){
+        List<Token> newList = new ArrayList<>();
+        for (Token token: tokenList){
+            if (token.getTag().equals(Tag.IDENTIFIER)){
+                switch (token.returnLexeme().toLowerCase()){
+                    case "/=":{
+                        newList.add(new Token(Tag.NE));
+                        break;
+                    }
+                    case ">=":{
+                        newList.add(new Token(Tag.GE));
+                        break;
+                    }
+                    case "<=":{
+                        newList.add(new Token(Tag.LE));
+                        break;
+                    }
+                    case "=":{
+                        newList.add(new Token(Tag.EQ));
+                        break;
+                    }
+                    case ">":{
+                        newList.add(new Token(Tag.GT));
+                        break;
+                    }
+                    case "<":{
+                        newList.add(new Token(Tag.LT));
+                        break;
+                    }
+                    case ":":{
+                        newList.add(new Token(Tag.COLON));
+                        break;
+                    }
+                    default:{
+                        if (isNumber(token.returnLexeme())){
+                            newList.add(new IntToken(Integer.parseInt(token.returnLexeme())));
+                        } else{
+                            newList.add(token);
+                        }
+                    }
+                }
+            }else newList.add(token);
+        }
+        tokenList = newList;
+    }
+
+    public boolean isNumber(String lexeme){
+        for (int i = 0; i<lexeme.length();i++){
+            if(!Character.isDigit(lexeme.charAt(i)))
+                return false;
+        }
+        return true;
     }
 }

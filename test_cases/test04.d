@@ -2,13 +2,13 @@ var a := 5;
 var b := 10;
 
 if a > b then
-   print "A is greather"
-end
+   print "A is greather";
+end;
 
 if a < b then
-   print "B is greather"
-end
+   print "B is greather";
+end;
 
 if a = b then
-   print "Numbers are equal"
-end
+   print "Numbers are equal";
+end;

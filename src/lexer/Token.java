@@ -19,4 +19,6 @@ public class Token extends bison.wrappers.Token {
     public Tag getTag() {
         return tag;
     }
+
+    public String returnLexeme(){return null;}
 }

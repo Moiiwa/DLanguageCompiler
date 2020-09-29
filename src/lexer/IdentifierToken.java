@@ -12,6 +12,11 @@ public class IdentifierToken extends Token {
     }
 
     @Override
+    public String returnLexeme(){
+        return lexeme;
+    }
+
+    @Override
     public String toString() {
         return "IdentifierToken(" + lexeme + ")";
     }
