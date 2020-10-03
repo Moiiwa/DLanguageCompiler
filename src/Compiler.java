@@ -7,7 +7,7 @@ public class Compiler {
     public static void main(String[] args) {
         Lexer lexer = new Lexer();
         try {
-            lexer.ParseFile("/root/IdeaProjects/DLanguageCompiler/test_cases/test02.d");
+            lexer.ParseFile("/Users/mihailgudkov/IdeaProjects/DLanguageCompiler/test_cases/test08.d");
             System.out.println(lexer.tokenList.size());
             YYParser parser = new YYParser(lexer);
             lexer.setIterator(lexer.tokenList.iterator());

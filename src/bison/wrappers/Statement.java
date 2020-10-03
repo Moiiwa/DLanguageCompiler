@@ -2,12 +2,12 @@ package bison.wrappers;
 
 public class Statement extends Node{
 
-    Declaration declaration;
-    IfStatement ifStatement;
-    Loop loop;
-    ReturnStatement returnStatement;
-    Print print;
-    Assignment assignment;
+    public Declaration declaration;
+    public IfStatement ifStatement;
+    public Loop loop;
+    public ReturnStatement returnStatement;
+    public Print print;
+    public Assignment assignment;
     public Statement(Declaration declaration){
         this.declaration = declaration;
     }
