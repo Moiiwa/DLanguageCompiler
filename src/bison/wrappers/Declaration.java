@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Declaration extends Node{
     Object value;
-    List<VariableDefinition> variableDefinitions;
+    public List<VariableDefinition> variableDefinitions;
     public Declaration(Token token, List<VariableDefinition> variableDefinitions){
         value = token;
         leftChild = token;

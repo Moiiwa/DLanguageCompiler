@@ -2,8 +2,8 @@ package bison.wrappers;
 
 public class VariableDefinition extends Node{
 
-    Identifier identifier;
-    Expression expression;
+    public Identifier identifier;
+    public Expression expression;
     public VariableDefinition(Identifier identifier){
         this.identifier = identifier;
     }
