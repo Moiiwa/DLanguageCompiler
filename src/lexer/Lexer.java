@@ -321,7 +321,6 @@ public class Lexer implements YYParser.Lexer{
                 if((isString && peek != '\'') || (peek!='\"' && isSingleQuoteString)){
                     stringBuilder.delete(stringBuilder.length()-2,stringBuilder.length()-1);
                     tokenList.add(new StrToken(stringBuilder.toString()));
-                    System.out.println(stringBuilder.toString());
                     stringBuilder = null;
                     isString = false;
                     isSingleQuoteString = false;

@@ -1,4 +1,5 @@
 
+import CodeGenerator.CodeGenerator;
 import bison.YYParser;
 import lexer.*;
 
@@ -8,11 +9,11 @@ public class Compiler {
         Lexer lexer = new Lexer();
         try {
             lexer.ParseFile("/Users/mihailgudkov/IdeaProjects/DLanguageCompiler/test_cases/test08.d");
-            System.out.println(lexer.tokenList.size());
             YYParser parser = new YYParser(lexer);
             lexer.setIterator(lexer.tokenList.iterator());
-            System.out.println(parser.parse());
-            System.out.println(2);
+            parser.parse();
+            CodeGenerator codeGenerator = new CodeGenerator(parser.programTree);
+            System.out.println();
 
         } catch (Exception e) {
             e.printStackTrace();

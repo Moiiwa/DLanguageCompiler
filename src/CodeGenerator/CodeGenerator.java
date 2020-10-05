@@ -3,14 +3,29 @@ package CodeGenerator;
 import bison.wrappers.ProgramTree;
 import bison.wrappers.Statement;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class CodeGenerator {
 
+    FileWriter writer;
     ProgramTree programTree;
-    public CodeGenerator(ProgramTree programTree){
+
+    public CodeGenerator(ProgramTree programTree) throws IOException {
         this.programTree = programTree;
+        File file = new File("file.j");
+        file.createNewFile();
+        System.out.println("File is created");
+        writer = new FileWriter("file.j");
+        writer.write(".class public GeneratedProgram\n");
+        writer.write(".super java/lang/Object\n");
+        writer.write(".method public static main([Ljava/lang/String;)V\n");
+        goThroughStatements();
     }
 
-    public void goThroughStatements(){
+    public void goThroughStatements() throws IOException {
         for (Statement statement: programTree.list){
             int type = identifyStatementType(statement);
             switch (type){
@@ -39,6 +54,9 @@ public class CodeGenerator {
                 }
             }
         }
+        writer.write("    return\n" +
+                ".end method");
+        writer.close();
     }
 
     public int identifyStatementType(Statement statement){
