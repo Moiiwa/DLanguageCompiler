@@ -28,7 +28,7 @@ public class CodeGenerator {
         writer.write(".super java/lang/Object\n");
         writer.write(".method public static main([Ljava/lang/String;)V\n");
         writer.write("\t.limit stack 10\n");
-        writer.write("\t.limit locals 100\n");
+        writer.write("\t.limit locals 200\n");
         goThroughStatements();
     }
 
@@ -61,8 +61,14 @@ public class CodeGenerator {
                 }
             }
         }
-        writer.write("    return\n" +
-                ".end method");
+        writer.write("    return\n" +"    True:\n" +
+                        "        ldc 1\n" +
+                        "        return\n" +
+                        "    False:\n" +
+                        "        ldc 0\n" +
+                        "        return\n" +
+                ".end method\n");
+
         writer.close();
     }
 
@@ -95,18 +101,21 @@ public class CodeGenerator {
                 identifiersToNumbers.put(identifier.lexeme, varsNum);
                 StringBuilder command = new StringBuilder();
                 writer.write(command.toString());
-                varsNum+=1;
+                varsNum+=2;
             }else throw new Exception("A variable with such name is already declared");
         }
     }
 
     public void assignVariables(List<VariableDefinition> variableDefinitions) throws Exception {
         for (VariableDefinition variableDefinition: variableDefinitions){
-            float value = estimateExpression(variableDefinition.expression);
-            IdentifierToken identifierToken = (IdentifierToken)variableDefinition.identifier;
-            int localnum = identifiersToNumbers.get(identifierToken.lexeme);
-            writer.write("\t ldc "+value+"\n");
-            writer.write("\t fstore "+localnum+"\n");
+            if (variableDefinition.expression != null) {
+                int localVarNum = estimateExpression(variableDefinition.expression);
+                varsNum+=2;
+                IdentifierToken identifierToken = (IdentifierToken) variableDefinition.identifier;
+                int localnum = identifiersToNumbers.get(identifierToken.lexeme);
+                writer.write("\tiload " + localVarNum + "\n");
+                writer.write("\tistore " + localnum + "\n");
+            }
         }
     }
 
@@ -130,9 +139,90 @@ public class CodeGenerator {
 
     }
 
-    private Float estimateExpression(Expression expression){
-        float value = 0;
+    private Integer estimateExpression(Expression expression) throws IOException {
+        ArrayList relations = expression.relations;
+        int value = estimateFactor((Factor) ((Relation)relations.get(0)).list.get(0));
+        if (((Relation)relations.get(0)).list.size()==1){
+            writer.write("\tldc "+value+"\n");
+            writer.write("\tistore "+varsNum+"\n");
+            writer.write("\tldc 0\n");
+        }else {
+            writer.write("\tldc 1\n");
+            writer.write("\tistore "+varsNum+"\n");
+            for (int i=1; i<((Relation)relations.get(0)).list.size();i++){
+                if (i % 2 == 0){
+                    Token token = (Token) ((Relation)relations.get(0)).list.get(i-1);
+                    int val1 = estimateFactor((Factor) ((Relation)relations.get(0)).list.get(i-2));
+                    int val2 = estimateFactor((Factor) ((Relation)relations.get(0)).list.get(i));
+                    identifyRelation(val1, val2, token);
+                }
+            }
+            writer.write("\tldc 1\n");
+        }
+        writer.write("\tistore "+(varsNum+1)+"\n");
+        return varsNum;
+    }
 
+    private Integer estimateFactor(Factor factor){
+        int value = 1;
         return value;
+    }
+
+    private void identifyRelation(int val1, int val2, Token token) throws IOException {
+        writer.write("\tldc "+val1+"\n");
+        writer.write("\tldc "+val2+"\n");
+        writer.write("\tisub\n");
+        switch (((lexer.Token)token).getTag()){
+            case LT:{
+                writer.write("\tiflt True\n");
+                writer.write("\tldc "+val1+"\n");
+                writer.write("\tldc "+val2+"\n");
+                writer.write("\tisub\n");
+                writer.write("\tifge False\n");
+                break;
+            }
+            case LE:{
+                writer.write("\tifle True\n");
+                writer.write("\tldc "+val1+"\n");
+                writer.write("\tldc "+val2+"\n");
+                writer.write("\tisub\n");
+                writer.write("\tifgt False\n");
+                break;
+            }
+            case GT:{
+                writer.write("\tifgt True\n");
+                writer.write("\tldc "+val1+"\n");
+                writer.write("\tldc "+val2+"\n");
+                writer.write("\tisub\n");
+                writer.write("\tifle False\n");
+                break;
+            }
+            case GE:{
+                writer.write("\tifge True\n");
+                writer.write("\tldc "+val1+"\n");
+                writer.write("\tldc "+val2+"\n");
+                writer.write("\tisub\n");
+                writer.write("\tiflt False\n");
+                break;
+            }
+            case EQ:{
+                writer.write("\tifeq True\n");
+                writer.write("\tldc "+val1+"\n");
+                writer.write("\tldc "+val2+"\n");
+                writer.write("\tisub\n");
+                writer.write("\tifne False\n");
+                break;
+            }
+            default:{
+                writer.write("\tifne True\n");
+                writer.write("\tldc "+val1+"\n");
+                writer.write("\tldc "+val2+"\n");
+                writer.write("\tisub\n");
+                writer.write("\tifeq False\n");
+            }
+        }
+        writer.write("\tiload "+varsNum+"\n");
+        writer.write("\timul\n");
+        writer.write("\tistore "+varsNum+"\n");
     }
 }
