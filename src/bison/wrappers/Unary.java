@@ -3,10 +3,10 @@ package bison.wrappers;
 import java.util.function.UnaryOperator;
 
 public class Unary extends Node{
-    Reference reference;
-    Primary primary;
+    public Reference reference;
+    public Primary primary;
     Token unaryOperator;
-    IsStatement isStatement;
+    public IsStatement isStatement;
     public Unary(Reference reference){
         this.reference = reference;
     }

@@ -2,6 +2,7 @@ package CodeGenerator;
 
 import bison.wrappers.*;
 import lexer.IdentifierToken;
+import lexer.IntToken;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -110,7 +111,6 @@ public class CodeGenerator {
         for (VariableDefinition variableDefinition: variableDefinitions){
             if (variableDefinition.expression != null) {
                 int localVarNum = estimateExpression(variableDefinition.expression);
-                varsNum+=2;
                 IdentifierToken identifierToken = (IdentifierToken) variableDefinition.identifier;
                 int localnum = identifiersToNumbers.get(identifierToken.lexeme);
                 writer.write("\tiload " + localVarNum + "\n");
@@ -143,7 +143,7 @@ public class CodeGenerator {
         ArrayList relations = expression.relations;
         int value = estimateFactor((Factor) ((Relation)relations.get(0)).list.get(0));
         if (((Relation)relations.get(0)).list.size()==1){
-            writer.write("\tldc "+value+"\n");
+            writer.write("\tiload "+value+"\n");          //change to iload
             writer.write("\tistore "+varsNum+"\n");
             writer.write("\tldc 0\n");
         }else {
@@ -160,12 +160,67 @@ public class CodeGenerator {
             writer.write("\tldc 1\n");
         }
         writer.write("\tistore "+(varsNum+1)+"\n");
-        return varsNum;
+        int numOfVar = varsNum;
+        varsNum+=2;
+        return numOfVar;
     }
 
-    private Integer estimateFactor(Factor factor){
-        int value = 1;
-        return value;
+    private Integer estimateFactor(Factor factor) throws IOException {
+        int numOfVar = 0;
+        if (factor.terms.size()==1){
+            numOfVar = estimateTerm((Term)factor.terms.get(0));
+        }else{
+
+        }
+        varsNum+=2;
+        return numOfVar;
+    }
+
+    private Integer estimateTerm(Term term) throws IOException {
+        int numOfVar = 0;
+        if (term.list.size()==1){
+            numOfVar = estimateUnary((Unary)term.list.get(0));
+        }else{
+
+        }
+        varsNum+=2;
+        return 0;
+    }
+
+    private Integer estimateUnary(Unary unary) throws IOException {
+        int numOfVar = 0;
+        if(unary.primary!=null){
+            numOfVar = estimatePrimary(unary.primary);
+        }
+        if(unary.reference!=null){
+            numOfVar = identifiersToNumbers.get(((IdentifierToken)unary.reference.token).lexeme);
+        }
+        if(unary.isStatement!=null){
+
+        }
+        varsNum+=2;
+        return numOfVar;
+    }
+
+    private Integer estimatePrimary(Primary primary) throws IOException {
+        int numOfVar = 0;
+        if (primary.literal != null){
+            Literal literal = primary.literal;
+            Token token = literal.token;
+            if (token instanceof IntToken){
+                writer.write("\t ldc "+ ((IntToken)token).value+'\n');
+                writer.write("\t istore "+ varsNum+ "\n");
+                numOfVar = varsNum;
+                varsNum+=2;
+            }
+        }
+        if (primary.token != null){
+
+        }
+        if (primary.function != null){
+
+        }
+        return numOfVar;
     }
 
     private void identifyRelation(int val1, int val2, Token token) throws IOException {

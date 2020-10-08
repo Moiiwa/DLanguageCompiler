@@ -2,9 +2,9 @@ package bison.wrappers;
 
 public class Literal extends Node{
 
-    Token token;
-    Tuple tuple;
-    Array array;
+    public Token token;
+    public Tuple tuple;
+    public Array array;
     public Literal(Token token){
         this.token = token;
     }

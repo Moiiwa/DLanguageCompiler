@@ -7,7 +7,7 @@ var maxi := 0;
 
 var i;
 for i in 1 .. len loop
-    if a > maxi then
+    if a < maxi then
     maxi := a;
     end;
 end;

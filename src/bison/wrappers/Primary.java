@@ -2,10 +2,10 @@ package bison.wrappers;
 
 public class Primary extends Node{
 
-    Literal literal = null;
-    Token token = null;
-    Function function = null;
-    Expression expression = null;
+    public Literal literal = null;
+    public Token token = null;
+    public Function function = null;
+    public Expression expression = null;
 
     public Primary(Literal literal){
         this.literal = literal;
