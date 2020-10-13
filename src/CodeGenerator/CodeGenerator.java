@@ -120,6 +120,7 @@ public class CodeGenerator {
                 IdentifierToken identifierToken = (IdentifierToken) variableDefinition.identifier;
                 int localnum = identifiersToNumbers.get(identifierToken.lexeme);
                 currentIdentifier = identifierToken.lexeme;
+                identifiersToTypes.put(currentIdentifier,'i');
                 int localVarNum = estimateExpression(variableDefinition.expression);
                 if (identifiersToTypes.get(identifierToken.lexeme)=='i') {
                     writer.write("\tiload " + localVarNum + "\n");
@@ -218,6 +219,37 @@ public class CodeGenerator {
                 if (identifiersToTypes.get(((IdentifierToken)reference.token).lexeme)=='s') {
                     writer.write("\taload " + val + "\n");
                     writer.write("\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+                }
+            }
+        }
+        else{
+            for (int i=0;i<statements.expressions.size();i++){
+                Term term = (Term)((Factor)((Relation)statements.expressions.get(i).relations.get(0)).list.get(0)).terms.get(0);
+                Primary primary = ((Unary)term.list.get(0)).primary;
+                Reference reference = ((Unary)term.list.get(0)).reference;
+                if (reference!=null)
+                    currentIdentifier = ((IdentifierToken)reference.token).lexeme;
+                int val = estimateExpression(statements.expressions.get(i));
+                writer.write("\taload 999\n");
+                if ( primary != null ) {
+                    if (primary.literal.token instanceof IntToken) {
+                        writer.write("\tiload " + val + "\n");
+                        writer.write("\tinvokevirtual java/io/PrintStream/println(I)V\n");
+                    }
+                    if (primary.literal.token instanceof StrToken) {
+                        writer.write("\tldc " + ((StrToken) primary.literal.token).str + "\n");
+                        writer.write("\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+                    }
+                }
+                if ( reference != null) {
+                    if (identifiersToTypes.get(((IdentifierToken)reference.token).lexeme)=='i') {
+                        writer.write("\tiload " + val + "\n");
+                        writer.write("\tinvokevirtual java/io/PrintStream/println(I)V\n");
+                    }
+                    if (identifiersToTypes.get(((IdentifierToken)reference.token).lexeme)=='s') {
+                        writer.write("\taload " + val + "\n");
+                        writer.write("\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+                    }
                 }
             }
         }
