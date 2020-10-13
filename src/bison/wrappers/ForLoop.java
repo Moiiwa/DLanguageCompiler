@@ -2,9 +2,9 @@ package bison.wrappers;
 
 public class ForLoop extends Node implements Loop{
 
-    Identifier identifier;
-    Range range;
-    Body body;
+    public Identifier identifier;
+    public Range range;
+    public Body body;
 
     public ForLoop(Identifier identifier, Range range, Body body){
         this.identifier = identifier;

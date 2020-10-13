@@ -9,14 +9,12 @@ public class Compiler {
     public static void main(String[] args) {
         Lexer lexer = new Lexer();
         try {
-            lexer.ParseFile("/Users/mihailgudkov/IdeaProjects/DLanguageCompiler/test_cases/test08.d");
+            //"/Users/mihailgudkov/IdeaProjects/DLanguageCompiler/test_cases/test08.d"
+            lexer.ParseFile(args [0]);
             YYParser parser = new YYParser(lexer);
             lexer.setIterator(lexer.tokenList.iterator());
             parser.parse();
             CodeGenerator codeGenerator = new CodeGenerator(parser.programTree);
-            Object var32 = 5;
-            PrintStream var999 = System.out;
-            var999.println("8");
 
         } catch (Exception e) {
             e.printStackTrace();

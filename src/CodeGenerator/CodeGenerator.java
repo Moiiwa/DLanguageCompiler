@@ -5,6 +5,7 @@ import lexer.IdentifierToken;
 import lexer.IntToken;
 import lexer.StrToken;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,6 +21,7 @@ public class CodeGenerator {
     HashMap<String,Character> identifiersToTypes = new HashMap<>();
     Integer varsNum = 0;
     String currentIdentifier = "";
+    Integer loopNum = 0;
 
     public CodeGenerator(ProgramTree programTree) throws Exception {
         this.programTree = programTree;
@@ -34,11 +36,20 @@ public class CodeGenerator {
         writer.write("\t.limit locals 1000\n");
         writer.write("\tgetstatic java/lang/System/out Ljava/io/PrintStream;\n");
         writer.write("\tastore 999\n");
-        goThroughStatements();
+        goThroughStatements(programTree.list);
+        writer.write("    return\n" +"    True:\n" +
+                "        ldc 1\n" +
+                "        return\n" +
+                "    False:\n" +
+                "        ldc 0\n" +
+                "        return\n" +
+                ".end method\n");
+
+        writer.close();
     }
 
-    public void goThroughStatements() throws Exception {
-        for (Statement statement: programTree.list){
+    public void goThroughStatements(List<Statement> list) throws Exception {
+        for (Statement statement: list){
             int type = identifyStatementType(statement);
             switch (type){
                 case 0:{
@@ -66,15 +77,6 @@ public class CodeGenerator {
                 }
             }
         }
-        writer.write("    return\n" +"    True:\n" +
-                        "        ldc 1\n" +
-                        "        return\n" +
-                        "    False:\n" +
-                        "        ldc 0\n" +
-                        "        return\n" +
-                ".end method\n");
-
-        writer.close();
     }
 
     public int identifyStatementType(Statement statement){
@@ -152,8 +154,34 @@ public class CodeGenerator {
 
     }
 
-    public void generateLoop(Statement statement){
+    public void generateLoop(Statement statement) throws Exception {
+        Loop loop = statement.loop;
+        if (loop instanceof WhileLoop){
 
+        }
+        if (loop instanceof ForLoop){
+            int expr1 = estimateExpression(((ForLoop) loop).range.expression1);
+            int expr2 = estimateExpression(((ForLoop) loop).range.expression2);
+            writer.write("\tiload "+expr2+'\n');
+            writer.write("\tiload "+expr1+'\n');
+            writer.write("\tisub\n");
+            writer.write("\tistore "+ varsNum+"\n");
+            int iterator = varsNum;
+            identifiersToNumbers.put(((IdentifierToken)((ForLoop) loop).identifier).lexeme,iterator);
+            identifiersToTypes.put(((IdentifierToken)((ForLoop) loop).identifier).lexeme,'i');
+            int currentLoop = loopNum;
+            writer.write("   L"+currentLoop+":\n");
+            loopNum+=1;
+            varsNum+=2;
+            writer.write("\tiload "+iterator+"\n");
+            writer.write("ldc 1\n" +
+                    "\tisub\n" +
+                    "\tistore "+iterator+"\n");
+            Body body = ((ForLoop) loop).body;
+            goThroughStatements(body.statements);
+            writer.write("\tiload "+iterator+"\n");
+            writer.write("\tifge L"+currentLoop+'\n');
+        }
     }
 
     public void generatePrint(Statement statement) throws IOException {
@@ -162,7 +190,8 @@ public class CodeGenerator {
             Term term = (Term)((Factor)((Relation)statements.expressions.get(0).relations.get(0)).list.get(0)).terms.get(0);
             Primary primary = ((Unary)term.list.get(0)).primary;
             Reference reference = ((Unary)term.list.get(0)).reference;
-            currentIdentifier = ((IdentifierToken)reference.token).lexeme;
+            if (reference!=null)
+                currentIdentifier = ((IdentifierToken)reference.token).lexeme;
             int val = estimateExpression(statements.expressions.get(0));
             writer.write("\taload 999\n");
             if ( primary != null ) {
@@ -231,10 +260,13 @@ public class CodeGenerator {
             numOfVar = estimateTerm((Term)factor.terms.get(0));
             varsNum+=2;
         }else{
-            int prevVal = -1;
+            int prevVal = varsNum;
+            varsNum+=2;
             for (int i = 2; i < factor.terms.size();i++){
                 if(i==2) {
                     numOfVar = estimateTerm((Term) factor.terms.get(i - 2));
+                }else {
+                    numOfVar = prevVal;
                 }
                 writer.write("\tiload "+numOfVar+"\n");
                 numOfVar = estimateTerm((Term)factor.terms.get(i));
@@ -256,9 +288,9 @@ public class CodeGenerator {
                         writer.write("\tidiv\n");
                     }
                 }
-                writer.write("\tistore "+numOfVar+"\n");
+                writer.write("\tistore "+prevVal+"\n");
             }
-            varsNum+=2;
+            return prevVal;
         }
 
         return numOfVar;
