@@ -159,11 +159,12 @@ public class CodeGenerator {
     public void generatePrint(Statement statement) throws IOException {
         PrintStatements statements = (PrintStatements)statement.print;
         if (statements.expressions.size()==1){
-            int val = estimateExpression(statements.expressions.get(0));
-            writer.write("\taload 999\n");
             Term term = (Term)((Factor)((Relation)statements.expressions.get(0).relations.get(0)).list.get(0)).terms.get(0);
             Primary primary = ((Unary)term.list.get(0)).primary;
             Reference reference = ((Unary)term.list.get(0)).reference;
+            currentIdentifier = ((IdentifierToken)reference.token).lexeme;
+            int val = estimateExpression(statements.expressions.get(0));
+            writer.write("\taload 999\n");
             if ( primary != null ) {
                 if (primary.literal.token instanceof IntToken) {
                     writer.write("\tiload " + val + "\n");
@@ -230,10 +231,34 @@ public class CodeGenerator {
             numOfVar = estimateTerm((Term)factor.terms.get(0));
             varsNum+=2;
         }else{
-            //for (int i = 2; i < factor.terms.size();i++){
-
-            //}
-            //varsNum+=2;
+            int prevVal = -1;
+            for (int i = 2; i < factor.terms.size();i++){
+                if(i==2) {
+                    numOfVar = estimateTerm((Term) factor.terms.get(i - 2));
+                }
+                writer.write("\tiload "+numOfVar+"\n");
+                numOfVar = estimateTerm((Term)factor.terms.get(i));
+                writer.write("\tiload "+numOfVar+"\n");
+                switch (((lexer.Token)factor.terms.get(i-1)).getTag()){
+                    case PLUS: {
+                        writer.write("\tiadd\n");
+                        break;
+                    }
+                    case MINUS: {
+                        writer.write("\tisub\n");
+                        break;
+                    }
+                    case MULT: {
+                        writer.write("\timul\n");
+                        break;
+                    }
+                    default: {
+                        writer.write("\tidiv\n");
+                    }
+                }
+                writer.write("\tistore "+numOfVar+"\n");
+            }
+            varsNum+=2;
         }
 
         return numOfVar;
@@ -244,7 +269,34 @@ public class CodeGenerator {
         if (term.list.size()==1){
             numOfVar = estimateUnary((Unary)term.list.get(0));
             varsNum+=2;
-        }else{
+        }else {
+            for (int i = 2; i < term.list.size(); i++) {
+                if (i == 2) {
+                    numOfVar = estimateUnary((Unary)term.list.get(i - 2 ));
+                }
+                writer.write("\tiload " + numOfVar + "\n");
+                numOfVar = estimateUnary((Unary)term.list.get(i));
+                writer.write("\tiload " + numOfVar + "\n");
+                switch (((lexer.Token) term.list.get(i-1)).getTag()) {
+                    case PLUS: {
+                        writer.write("\tiadd\n");
+                        break;
+                    }
+                    case MINUS: {
+                        writer.write("\tisub\n");
+                        break;
+                    }
+                    case MULT: {
+                        writer.write("\timul\n");
+                        break;
+                    }
+                    default: {
+                        writer.write("\tidiv\n");
+                    }
+                }
+                writer.write("\tistore " + numOfVar + "\n");
+            }
+        varsNum+=2;
 
         }
 
