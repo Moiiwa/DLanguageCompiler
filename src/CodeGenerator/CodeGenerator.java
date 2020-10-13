@@ -3,6 +3,7 @@ package CodeGenerator;
 import bison.wrappers.*;
 import lexer.IdentifierToken;
 import lexer.IntToken;
+import lexer.StrToken;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,11 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CodeGenerator {
-
     FileWriter writer;
     ProgramTree programTree;
     HashMap<String,Integer> identifiersToNumbers = new HashMap();
+    HashMap<String,Character> identifiersToTypes = new HashMap<>();
     Integer varsNum = 0;
+    String currentIdentifier = "";
 
     public CodeGenerator(ProgramTree programTree) throws Exception {
         this.programTree = programTree;
@@ -29,7 +31,9 @@ public class CodeGenerator {
         writer.write(".super java/lang/Object\n");
         writer.write(".method public static main([Ljava/lang/String;)V\n");
         writer.write("\t.limit stack 10\n");
-        writer.write("\t.limit locals 200\n");
+        writer.write("\t.limit locals 1000\n");
+        writer.write("\tgetstatic java/lang/System/out Ljava/io/PrintStream;\n");
+        writer.write("\tastore 999\n");
         goThroughStatements();
     }
 
@@ -99,6 +103,7 @@ public class CodeGenerator {
         for (VariableDefinition variableDefinition: variableDefinitions){
             IdentifierToken identifier = (IdentifierToken)variableDefinition.identifier;
             if (!identifiersToNumbers.containsKey(identifier.lexeme)) {
+                currentIdentifier = identifier.lexeme;
                 identifiersToNumbers.put(identifier.lexeme, varsNum);
                 StringBuilder command = new StringBuilder();
                 writer.write(command.toString());
@@ -110,16 +115,36 @@ public class CodeGenerator {
     public void assignVariables(List<VariableDefinition> variableDefinitions) throws Exception {
         for (VariableDefinition variableDefinition: variableDefinitions){
             if (variableDefinition.expression != null) {
-                int localVarNum = estimateExpression(variableDefinition.expression);
                 IdentifierToken identifierToken = (IdentifierToken) variableDefinition.identifier;
                 int localnum = identifiersToNumbers.get(identifierToken.lexeme);
-                writer.write("\tiload " + localVarNum + "\n");
-                writer.write("\tistore " + localnum + "\n");
+                currentIdentifier = identifierToken.lexeme;
+                int localVarNum = estimateExpression(variableDefinition.expression);
+                if (identifiersToTypes.get(identifierToken.lexeme)=='i') {
+                    writer.write("\tiload " + localVarNum + "\n");
+                    writer.write("\tistore " + localnum + "\n");
+                }
+                if (identifiersToTypes.get(identifierToken.lexeme)=='s') {
+                    writer.write("\taload " + localVarNum + "\n");
+                    writer.write("\tastore " + localnum + "\n");
+                }
             }
         }
     }
 
-    public void generateAssignment(Statement statement){
+    public void generateAssignment(Statement statement) throws IOException {
+        Assignment assignment = statement.assignment;
+        String lexeme = ((IdentifierToken)assignment.reference.token).lexeme;
+        Integer numOfVar = identifiersToNumbers.get(lexeme);
+        currentIdentifier = lexeme;
+        int expIdent = estimateExpression(assignment.expression);
+        if (identifiersToTypes.get(lexeme)=='i') {
+            writer.write("\tiload " + expIdent + "\n");
+            writer.write("\tistore " + numOfVar + "\n");
+        }
+        if (identifiersToTypes.get(lexeme)=='s') {
+            writer.write("\taload " + expIdent + "\n");
+            writer.write("\tastore " + numOfVar + "\n");
+        }
 
     }
 
@@ -131,8 +156,35 @@ public class CodeGenerator {
 
     }
 
-    public void generatePrint(Statement statement){
-
+    public void generatePrint(Statement statement) throws IOException {
+        PrintStatements statements = (PrintStatements)statement.print;
+        if (statements.expressions.size()==1){
+            int val = estimateExpression(statements.expressions.get(0));
+            writer.write("\taload 999\n");
+            Term term = (Term)((Factor)((Relation)statements.expressions.get(0).relations.get(0)).list.get(0)).terms.get(0);
+            Primary primary = ((Unary)term.list.get(0)).primary;
+            Reference reference = ((Unary)term.list.get(0)).reference;
+            if ( primary != null ) {
+                if (primary.literal.token instanceof IntToken) {
+                    writer.write("\tiload " + val + "\n");
+                    writer.write("\tinvokevirtual java/io/PrintStream/println(I)V\n");
+                }
+                if (primary.literal.token instanceof StrToken) {
+                    writer.write("\tldc " + ((StrToken) primary.literal.token).str + "\n");
+                    writer.write("\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+                }
+            }
+            if ( reference != null) {
+                if (identifiersToTypes.get(((IdentifierToken)reference.token).lexeme)=='i') {
+                    writer.write("\tiload " + val + "\n");
+                    writer.write("\tinvokevirtual java/io/PrintStream/println(I)V\n");
+                }
+                if (identifiersToTypes.get(((IdentifierToken)reference.token).lexeme)=='s') {
+                    writer.write("\taload " + val + "\n");
+                    writer.write("\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+                }
+            }
+        }
     }
 
     public void generateReturn(Statement statement){
@@ -143,9 +195,16 @@ public class CodeGenerator {
         ArrayList relations = expression.relations;
         int value = estimateFactor((Factor) ((Relation)relations.get(0)).list.get(0));
         if (((Relation)relations.get(0)).list.size()==1){
-            writer.write("\tiload "+value+"\n");          //change to iload
-            writer.write("\tistore "+varsNum+"\n");
-            writer.write("\tldc 0\n");
+            if (identifiersToTypes.get(currentIdentifier)=='i') {
+                writer.write("\tiload " + value + "\n");          //change to iload
+                writer.write("\tistore " + varsNum + "\n");
+                writer.write("\tldc 0\n");
+            }
+            if (identifiersToTypes.get(currentIdentifier)=='s') {
+                writer.write("\taload " + value + "\n");          //change to iload
+                writer.write("\tastore " + varsNum + "\n");
+                writer.write("\tldc 0\n");
+            }
         }else {
             writer.write("\tldc 1\n");
             writer.write("\tistore "+varsNum+"\n");
@@ -169,10 +228,14 @@ public class CodeGenerator {
         int numOfVar = 0;
         if (factor.terms.size()==1){
             numOfVar = estimateTerm((Term)factor.terms.get(0));
+            varsNum+=2;
         }else{
+            //for (int i = 2; i < factor.terms.size();i++){
 
+            //}
+            //varsNum+=2;
         }
-        varsNum+=2;
+
         return numOfVar;
     }
 
@@ -180,25 +243,28 @@ public class CodeGenerator {
         int numOfVar = 0;
         if (term.list.size()==1){
             numOfVar = estimateUnary((Unary)term.list.get(0));
+            varsNum+=2;
         }else{
 
         }
-        varsNum+=2;
-        return 0;
+
+        return numOfVar;
     }
 
     private Integer estimateUnary(Unary unary) throws IOException {
         int numOfVar = 0;
         if(unary.primary!=null){
             numOfVar = estimatePrimary(unary.primary);
+            varsNum+=2;
         }
         if(unary.reference!=null){
             numOfVar = identifiersToNumbers.get(((IdentifierToken)unary.reference.token).lexeme);
+            varsNum+=2;
         }
         if(unary.isStatement!=null){
 
         }
-        varsNum+=2;
+
         return numOfVar;
     }
 
@@ -208,8 +274,17 @@ public class CodeGenerator {
             Literal literal = primary.literal;
             Token token = literal.token;
             if (token instanceof IntToken){
+                identifiersToTypes.put(currentIdentifier,'i');
                 writer.write("\t ldc "+ ((IntToken)token).value+'\n');
                 writer.write("\t istore "+ varsNum+ "\n");
+                numOfVar = varsNum;
+                varsNum+=2;
+            }
+
+            if (token instanceof StrToken){
+                identifiersToTypes.put(currentIdentifier,'s');
+                writer.write("\t ldc "+ ((StrToken)token).str+'\n');
+                writer.write("\t astore "+ varsNum+ "\n");
                 numOfVar = varsNum;
                 varsNum+=2;
             }

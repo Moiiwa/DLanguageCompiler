@@ -2,6 +2,7 @@
 import CodeGenerator.CodeGenerator;
 import bison.YYParser;
 import lexer.*;
+import java.io.PrintStream;
 
 public class Compiler {
 
@@ -13,7 +14,9 @@ public class Compiler {
             lexer.setIterator(lexer.tokenList.iterator());
             parser.parse();
             CodeGenerator codeGenerator = new CodeGenerator(parser.programTree);
-            System.out.println();
+            Object var32 = 5;
+            PrintStream var999 = System.out;
+            var999.println("8");
 
         } catch (Exception e) {
             e.printStackTrace();
