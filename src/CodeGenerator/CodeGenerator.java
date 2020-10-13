@@ -162,10 +162,14 @@ public class CodeGenerator {
         if (loop instanceof ForLoop){
             int expr1 = estimateExpression(((ForLoop) loop).range.expression1);
             int expr2 = estimateExpression(((ForLoop) loop).range.expression2);
-            writer.write("\tiload "+expr2+'\n');
             writer.write("\tiload "+expr1+'\n');
+            writer.write("\tldc 1\n");
             writer.write("\tisub\n");
             writer.write("\tistore "+ varsNum+"\n");
+            writer.write("\tiload "+expr2+"\n");
+            writer.write("\tldc 1\n");
+            writer.write("\tisub\n");
+            writer.write("\tistore "+expr2+"\n");
             int iterator = varsNum;
             identifiersToNumbers.put(((IdentifierToken)((ForLoop) loop).identifier).lexeme,iterator);
             identifiersToTypes.put(((IdentifierToken)((ForLoop) loop).identifier).lexeme,'i');
@@ -175,11 +179,13 @@ public class CodeGenerator {
             varsNum+=2;
             writer.write("\tiload "+iterator+"\n");
             writer.write("ldc 1\n" +
-                    "\tisub\n" +
+                    "\tiadd\n" +
                     "\tistore "+iterator+"\n");
             Body body = ((ForLoop) loop).body;
             goThroughStatements(body.statements);
+            writer.write("\tiload "+expr2+"\n");
             writer.write("\tiload "+iterator+"\n");
+            writer.write("\tisub\n");
             writer.write("\tifge L"+currentLoop+'\n');
         }
     }
