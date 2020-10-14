@@ -9,6 +9,6 @@ print len;
 
 for i in 1 .. len loop
     for j in 1 .. i loop
-        print "*";
+        print j;
     end;
 end;
